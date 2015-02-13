@@ -1,0 +1,25 @@
+menuconfig SWITCH
+	tristate "Switch class support"
+	help
+	  Say Y here to enable switch class support. This allows
+	  monitoring switches by userspace via sysfs and uevent.
+
+if SWITCH
+
+config SWITCH_GPIO
+	tristate "GPIO Swith support"
+	depends on GENERIC_GPIO
+	help
+	  Say Y here to enable GPIO based switch support.
+
+config SWITCH_MIC
+       tristate "microphone Switch support"
+       help
+         Say Y here to enable microphone switch support.
+		 
+config SWITCH_DOCK
+       tristate "Dock Switch support"
+       help
+         Say Y here to enable dock switch support.
+
+endif # SWITCH
