@@ -27,7 +27,7 @@
 #define		CM3218_ALS_cmd	0x20>>1
 #endif  //ifdef CM3218_AD
 
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
     #define            CM3218_check_INI        0x19>>1
 #else
     #define     CM3218_check_INI    0x2c

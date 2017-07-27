@@ -87,7 +87,7 @@ struct max17048_chip *max17048_data;
 #ifdef CONFIG_CHARGER_BQ24160
 #include <linux/i2c/bq24160_charger.h>
 #endif
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
 void ep5n_a2_set_charge_led(int r_on, int g_on);
 #endif
 #ifdef CONFIG_SENSORS_INA230
@@ -303,7 +303,7 @@ static void max17048_get_soc(struct i2c_client *client)
 		chip->capacity_level = POWER_SUPPLY_CAPACITY_LEVEL_NORMAL;
 	}
 
-#if defined(CONFIG_SENSORS_INA230) && defined(CONFIG_PROJECT_EP5N)
+#if defined(CONFIG_SENSORS_INA230) && defined(CONFIG_PROJECT_FG6Q)
 
 	if(chip->soc == MAX17048_BATTERY_FULL && charge_stat)
 		chip->status = POWER_SUPPLY_STATUS_FULL;
@@ -339,13 +339,13 @@ static void max17048_work(struct work_struct *work)
 	if (chip->soc != chip->lasttime_soc ||
 		chip->status != chip->lasttime_status) {
 		chip->lasttime_soc = chip->soc;
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
 		chip->lasttime_status = chip->status;
 #endif
 		power_supply_changed(&chip->battery);
 	}
 
-#if defined(CONFIG_PROJECT_EP5N) & defined(CONFIG_CHARGER_BQ24160)
+#if defined(CONFIG_PROJECT_FG6Q) & defined(CONFIG_CHARGER_BQ24160)
 	bq24160_is_charge_done(&charge_done);
 	if(charge_done && chip->soc < recharge_soc)
 	{
@@ -374,7 +374,7 @@ void max17048_battery_status(int status,
 		max17048_data->status = POWER_SUPPLY_STATUS_DISCHARGING;
 		max17048_data->charge_complete = 0;
 	}
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
 	if (max17048_data->status == POWER_SUPPLY_STATUS_CHARGING)
 		max17048_get_soc(max17048_data->client);
 #endif

@@ -981,17 +981,11 @@ config TEGRA_VDD_CORE_OVERRIDE
 	  within override range, and core modules clocks are capped at rates
 	  safe at override level.
 
-config PROJECT_EP5N
-        bool "NV EP5N board"
-
 config PROJECT_SKU_VARIANT_BBG
         bool "For BungBungGame"
 
 config PROJECT_SKU_VARIANT_LEPAN
         bool "For LePan"
-
-config PROJECT_SKU_VARIANT_GIGASET
-        bool "For GIGASET"
 
 config PROJECT_PP3N
         bool "NV PP3N board"
@@ -999,10 +993,10 @@ config PROJECT_PP3N
 config PROJECT_PP3N_FHD
         bool "NV PP3N board"
 
-config QIC_GEN3_CAMERA_CONFIG
-        bool "NV Gen3 camera HW config"
-
 config 2S_BATTERY_USB_CHARGING
         bool "Support usb charging for 2S battery"
+
+config PROJECT_FG6Q
+        bool "Quanta FG6Q/Gigaset QV1030"
 
 endif

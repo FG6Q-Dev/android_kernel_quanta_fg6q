@@ -434,7 +434,7 @@ static void macallan_panel_select(void)
 		panel = &dsi_s_wqxga_10_1;
 		break;
 	default:
-#if defined(CONFIG_PROJECT_EP5N)
+#if defined(CONFIG_PROJECT_FG6Q)
 		panel = &dsi_s_wqxga_10_1;	//EP5N settings	
 #elif defined(CONFIG_PROJECT_PP3N)
 #ifdef CONFIG_PROJECT_PP3N_FHD

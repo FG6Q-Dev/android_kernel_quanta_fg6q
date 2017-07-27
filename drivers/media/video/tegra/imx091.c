@@ -50,7 +50,7 @@ static u16 imx091_ids[] = {
 	0x0091,
 };
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 // kokob3: config for QPad3, SONY need 1v2, 1v8 and 2v8, EP5N convert 1v2 from 1v8 onboard
 static struct nvc_gpio_init imx091_gpios[] = {
 	{IMX091_GPIO_RESET, GPIOF_OUT_INIT_LOW, "pri_cam_reset", false, true},
@@ -1482,7 +1482,7 @@ static int imx091_gpio_reset(struct imx091_info *info, int val)
 
 static void imx091_gpio_able(struct imx091_info *info, int val)
 {
-#ifndef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifndef CONFIG_PROJECT_FG6Q
 	if (val)
 		imx091_gpio_wr(info, IMX091_GPIO_GP1, val);
 	else
@@ -1504,7 +1504,7 @@ static void imx091_gpio_exit(struct imx091_info *info)
 
 static void imx091_gpio_init(struct imx091_info *info)
 {
-#ifndef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifndef CONFIG_PROJECT_FG6Q
 	char label[32];
 #endif
 	unsigned long flags;
@@ -1544,7 +1544,7 @@ static void imx091_gpio_init(struct imx091_info *info)
 		if (!info->pdata->gpio[j].init_en)
 			continue;
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 		err = gpio_request_one(info->gpio[type].gpio, flags, imx091_gpios[i].label);
 		if (err) {
 			dev_err(&info->i2c_client->dev, "%s ERR %s %u\n",

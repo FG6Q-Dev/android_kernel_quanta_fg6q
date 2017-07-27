@@ -67,7 +67,7 @@
 #include "tegra-board-id.h"
 #include "dvfs.h"
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static struct nvc_gpio_pdata imx091_gpio_pdata[] = {
 	{IMX091_GPIO_RESET, CAM_PRI_RSTN, true, false},
 	{IMX091_GPIO_PWDN, CAM_PRI_PWRDWN, true, false},
@@ -129,7 +129,7 @@ static struct cm3218_platform_data cm3218_pdata = {
         .levels = { 0x0A, 0xA0, 0xE1, 0x140, 0x280, 0x500,
                     0xA28, 0x16A8, 0x1F40, 0x2800},
         .power = NULL, //__capella_cm3218_power,
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
             .ALS_slave_address = 0x90 >> 1,
 #else
         .ALS_slave_address = 0x10,
@@ -141,7 +141,7 @@ static struct cm3218_platform_data cm3218_pdata = {
 
 static struct i2c_board_info macallan_i2c_board_info_cm3218[] = {
         {
-#ifdef CONFIG_PROJECT_EP5N            
+#ifdef CONFIG_PROJECT_FG6Q            
                 I2C_BOARD_INFO(CM3218_I2C_NAME, 0x90 >> 1),
 #else
                 I2C_BOARD_INFO(CM3218_I2C_NAME, 0x10),
@@ -355,7 +355,7 @@ static int macallan_get_vcmvdd(void)
 	}
 	return 0;
 }
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static int macallan_ar0833_power_on(struct ar0833_power_rail *pw)
 {
 	int err;
@@ -446,7 +446,7 @@ struct ar0833_platform_data macallan_ar0833_pdata = {
 	.power_off = macallan_ar0833_power_off,
 };
 #endif
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static int macallan_imx091_power_on(struct nvc_regulator *vreg)
 {
 	int err;
@@ -655,7 +655,7 @@ static struct imx091_platform_data imx091_pdata = {
 	.power_off		= macallan_imx091_power_off,
 };
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static int macallan_imx132_power_on(struct imx132_power_rail *pw)
 {
 	int err;
@@ -923,7 +923,7 @@ struct a1040_platform_data macallan_a1040_pdata = {
 };
 #endif
 
-#ifndef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifndef CONFIG_PROJECT_FG6Q
 static int macallan_ov9772_power_on(struct ov9772_power_rail *pw)
 {
 	int err;
@@ -1062,7 +1062,7 @@ static struct as364x_platform_data macallan_as3648_pdata = {
 };
 #endif
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static int macallan_lm3560_power_on(struct lm356x_power_rail *pw)
 {
 	int err;
@@ -1134,7 +1134,7 @@ static struct ad5816_platform_data macallan_ad5816_pdata = {
 	.power_off = macallan_focuser_power_off,
 };
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static struct i2c_board_info macallan_i2c_board_info_qpadgen3_cam[] = {
 	{
 		I2C_BOARD_INFO("imx091", 0x10),
@@ -1189,7 +1189,7 @@ static struct i2c_board_info macallan_i2c_board_info_e1625[] = {
 
 static int macallan_camera_init(void)
 {
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 	tegra_pinmux_config_table(&mclk_enable, 1);
 	tegra_pinmux_config_table(&pbb0_enable, 1);
 #else
@@ -1197,7 +1197,7 @@ static int macallan_camera_init(void)
 	tegra_pinmux_config_table(&pbb0_disable, 1);
 #endif
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 	i2c_register_board_info(2, macallan_i2c_board_info_qpadgen3_cam,
 		ARRAY_SIZE(macallan_i2c_board_info_qpadgen3_cam));
 #else
@@ -1213,7 +1213,7 @@ static int macallan_camera_init(void)
 static struct mpu_platform_data gyro_platform_data = {
 	.int_config = 0x10,
 	.level_shifter = 0,
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
     .orientation = {	0, -1,  0,
 					    1,  0,  0,
 						0,  0,  1 },
@@ -1225,7 +1225,7 @@ static struct mpu_platform_data gyro_platform_data = {
 	.sec_slave_type = SECONDARY_SLAVE_TYPE_COMPASS,
 	.sec_slave_id = COMPASS_ID_AK8963,
 	.secondary_i2c_addr = 0x0C,	
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
     .secondary_orientation = { 0, 1, 0,
 							   -1, 0, 0,
 							   0, 0, 1 },
@@ -1440,7 +1440,7 @@ static int macallan_nct1008_init(void)
 static struct thermal_trip_info skin_trips[] = {
 	{
 		.cdev_type = "skin-balanced",
-		#ifdef CONFIG_PROJECT_SKU_VARIANT_GIGASET
+		#ifdef CONFIG_PROJECT_FG6Q
 			.trip_temp = 48000,
 		#else
                         .trip_temp = 45000,
@@ -1658,7 +1658,7 @@ int __init macallan_sensors_init(void)
 	macallan_camera_init();
     mpuirq_init();
     cm3218irq_init();
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
     i2c_register_board_info(2, macallan_i2c_board_info_cm3218,
                 ARRAY_SIZE(macallan_i2c_board_info_cm3218));
 #else
@@ -1674,7 +1674,7 @@ int __init macallan_sensors_init(void)
 	i2c_register_board_info(0, macallan_i2c0_board_info_cm3217,
 				ARRAY_SIZE(macallan_i2c0_board_info_cm3217));
 	*/
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
 	i2c_register_board_info(0, max17048_boardinfo,
 		ARRAY_SIZE(max17048_boardinfo));
 #endif

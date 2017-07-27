@@ -241,7 +241,7 @@ static struct ina230_platform_data power_mon_ina230_info[] = {
 	}
 };
 
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
 static struct i2c_board_info macallan_i2c1_ina_board_info[] = {
 	{
 		I2C_BOARD_INFO("ina230", 0x44),

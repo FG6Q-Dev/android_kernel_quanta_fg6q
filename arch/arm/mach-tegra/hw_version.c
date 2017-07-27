@@ -16,7 +16,7 @@
 #include "gpio-names.h"
 #include "hw_version.h"
 
-#if defined( CONFIG_PROJECT_EP5N)
+#if defined( CONFIG_PROJECT_FG6Q)
 #define BOARD_ID_0	TEGRA_GPIO_PH6
 #define BOARD_ID_1	TEGRA_GPIO_PB1
 #define RAMCODES_ID_0	TEGRA_GPIO_PG4

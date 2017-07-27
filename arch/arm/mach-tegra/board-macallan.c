@@ -975,7 +975,7 @@ static int __init gen3_32k_clk_init(void)
 	return 0;
 }
 
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
 #define GEN3_CHARGE_LED_R		TEGRA_GPIO_PR5
 #define GEN3_CHARGE_LED_G		TEGRA_GPIO_PS0
 

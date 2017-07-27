@@ -676,7 +676,7 @@ static int __devinit ina230_probe(struct i2c_client *client,
 	g_client = client;
 
 //request SMPS6 power or the I2C Gen2 3V pull high will be removed in early suspend
-#ifdef CONFIG_PROJECT_EP5N
+#ifdef CONFIG_PROJECT_FG6Q
 	vdd_lcd_hv_r_edp = regulator_get(NULL, "vdd_lcd_hv_r_edp");
 	if(IS_ERR_OR_NULL(vdd_lcd_hv_r_edp))
 	{

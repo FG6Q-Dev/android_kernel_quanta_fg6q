@@ -71,7 +71,7 @@
 #include "tegra-board-id.h"
 #include "dvfs.h"
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static struct nvc_gpio_pdata imx091_gpio_pdata[] = {
 	{IMX091_GPIO_RESET, CAM_PRI_RSTN, true, false},
 	{IMX091_GPIO_PWDN, CAM_PRI_PWRDWN, true, false},
@@ -413,7 +413,7 @@ static int dalmore_get_vcmvdd(void)
 	return 0;
 }
 
-#ifndef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifndef CONFIG_PROJECT_FG6Q
 static int dalmore_ar0833_power_on(struct ar0833_power_rail *pw)
 {
 	int err;
@@ -489,7 +489,7 @@ struct ar0833_platform_data dalmore_ar0833_pdata = {
 };
 #endif
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static int dalmore_imx091_power_on(struct nvc_regulator *vreg)
 {
 	int err;
@@ -680,7 +680,7 @@ static struct imx091_platform_data imx091_pdata = {
 	.power_off		= dalmore_imx091_power_off,
 };
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static int dalmore_imx132_power_on(struct imx132_power_rail *pw)
 {
 	int err;
@@ -927,7 +927,7 @@ struct sbs_platform_data sbs_pdata = {
 	.i2c_retry_count = 2,
 };
 
-#ifndef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifndef CONFIG_PROJECT_FG6Q
 static int dalmore_imx135_power_on(struct imx135_power_rail *pw)
 {
 	int err;
@@ -1115,7 +1115,7 @@ static struct as364x_platform_data dalmore_as3648_pdata = {
 };
 #endif
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static int dalmore_lm3560_power_on(struct lm356x_power_rail *pw)
 {
 	int err;
@@ -1492,7 +1492,7 @@ static struct i2c_board_info dalmore_i2c_board_info_ad5823 = {
 };
 #endif
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 static struct i2c_board_info dalmore_i2c_board_info_qpadgen3_cam[] = {
 	{
 		I2C_BOARD_INFO("imx132", 0x36),
@@ -1562,7 +1562,7 @@ static int dalmore_camera_init(void)
 {
 	pr_info("kokob3: %s\n", __func__);
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 	tegra_pinmux_config_table(&mclk_enable, 1);
 	tegra_pinmux_config_table(&pbb0_enable, 1);
 #else
@@ -1570,7 +1570,7 @@ static int dalmore_camera_init(void)
 	tegra_pinmux_config_table(&pbb0_disable, 1);
 #endif
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 	i2c_register_board_info(2, dalmore_i2c_board_info_qpadgen3_cam,
 		ARRAY_SIZE(dalmore_i2c_board_info_qpadgen3_cam));
 #else

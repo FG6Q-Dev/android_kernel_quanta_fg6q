@@ -15,7 +15,7 @@
 #include <media/nvc_image.h>
 
 /* See notes in the nvc.h file on the GPIO usage */
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 enum imx091_gpio {
 	IMX091_GPIO_RESET = 0,
 	IMX091_GPIO_PWDN,

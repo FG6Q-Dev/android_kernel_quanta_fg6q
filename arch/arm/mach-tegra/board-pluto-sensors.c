@@ -59,7 +59,7 @@
 static struct nvc_gpio_pdata imx091_gpio_pdata[] = {
 	{IMX091_GPIO_RESET, CAM_RSTN, true, false},
 	{IMX091_GPIO_PWDN, CAM1_POWER_DWN_GPIO, true, false},
-#ifndef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifndef CONFIG_PROJECT_FG6Q
 	{IMX091_GPIO_GP1, CAM_GPIO1, true, false}
 #endif
 };

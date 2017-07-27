@@ -695,7 +695,7 @@ static int imx132_power_get(struct imx132_info *info)
 {
 	struct imx132_power_rail *pw = &info->power;
 
-#ifdef CONFIG_QIC_GEN3_CAMERA_CONFIG
+#ifdef CONFIG_PROJECT_FG6Q
 // kokob3: config for QPad3, SONY need 1v2, 1v8 and 2v8, EP5N convert 1v2 from 1v8 onboard
 	imx132_regulator_get(info, &pw->dvdd, "sec_cam_1v8");
 	imx132_regulator_get(info, &pw->avdd, "sec_cam_2v8");

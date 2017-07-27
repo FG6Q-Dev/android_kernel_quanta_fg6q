@@ -1740,7 +1740,7 @@ void usb_disconnect(struct usb_device **pdev)
 	usb_set_device_state(udev, USB_STATE_NOTATTACHED);
 	dev_info(&udev->dev, "USB disconnect, device number %d\n",
 			udev->devnum);
-#if defined(CONFIG_PROJECT_EP5N)
+#if defined(CONFIG_PROJECT_FG6Q)
 	if (udev->devnum == dock_num)
 		dock_switch_work(1);
 #endif
@@ -1798,7 +1798,7 @@ static void announce_device(struct usb_device *udev)
 		le16_to_cpu(udev->descriptor.idVendor),
 		le16_to_cpu(udev->descriptor.idProduct));
 
-#if defined(CONFIG_PROJECT_EP5N)
+#if defined(CONFIG_PROJECT_FG6Q)
 	if ((udev->descriptor.idVendor == 0x0424) && (udev->descriptor.idProduct == 0x9514)) {
 		dock_num=udev->devnum;
 		dock_switch_work(0);
