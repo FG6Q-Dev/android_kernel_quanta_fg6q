@@ -309,10 +309,10 @@ exit:
 	//#include "ft_app.i"
 //};
 static unsigned char fts_soe[] = {
-      #include "ft_app_soe_0x0c.i"
+      //#include "ft_app_soe_0x0c.i"
 };
 static unsigned char fts_jtouch[] = {
-      #include "ft_app_jt_0x16.i"
+      //#include "ft_app_jt_0x16.i"
 };
 
 

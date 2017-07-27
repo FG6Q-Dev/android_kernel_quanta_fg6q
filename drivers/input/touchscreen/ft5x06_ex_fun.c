@@ -40,16 +40,6 @@ static unsigned char CTPM_FW[]=
 {
 	//#include "ft_app.i"
 };
-#ifdef CTPM_DOWNLOAD
-static unsigned char CTPM_MAIN_FW[]=
-{
-	#include "ft_all.i"
-};
-static unsigned char CTPM_INFO_FW[]=
-{
-	#include "ft_info.i"
-};
-#endif
 static struct mutex device_mode_mutex;
 #define CTP_I2C_SLAVEADDR 0x70
 int ft5x0x_write_reg(unsigned char regaddr, unsigned char regvalue)
