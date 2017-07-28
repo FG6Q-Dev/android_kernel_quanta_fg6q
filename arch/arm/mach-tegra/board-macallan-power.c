@@ -77,11 +77,7 @@ static struct regulator_consumer_supply bq2419x_batt_supply[] = {
 };
 
 static struct bq2419x_vbus_platform_data bq2419x_vbus_pdata = {
-#ifdef CONFIG_PROJECT_PP3N
-	.gpio_otg_iusb = -1,
-#else
 	.gpio_otg_iusb = TEGRA_GPIO_PI4,
-#endif
 	.num_consumer_supplies = ARRAY_SIZE(bq2419x_vbus_supply),
 	.consumer_supplies = bq2419x_vbus_supply,
 };
@@ -107,26 +103,7 @@ static struct i2c_board_info __initdata macallan_max17048_boardinfo[] = {
 	},
 };
 
-#ifdef CONFIG_PROJECT_PP3N
-struct bq2419x_charger_platform_data bq24193_charger_pdata = {
-	.use_usb = 1,
-	.use_mains = 1,
-	.update_status = bq27541_battery_status,
-	.battery_check = bq27541_check_battery,
-	.max_charge_current_mA = 1500,
-	.charging_term_current_mA = 100,
-	.consumer_supplies = bq2419x_batt_supply,
-	.num_consumer_supplies = ARRAY_SIZE(bq2419x_batt_supply),
-};
-#endif
-
 struct bq2419x_platform_data macallan_bq2419x_pdata = {
-#ifndef CONFIG_PROJECT_PP3N
-	.vbus_pdata = &bq2419x_vbus_pdata,
-#endif
-#ifdef CONFIG_PROJECT_PP3N
-	.bcharger_pdata = &bq24193_charger_pdata,
-#endif
 	.bcharger_pdata = &macallan_bq2419x_charger_pdata,
 };
 
@@ -338,9 +315,7 @@ static struct regulator_consumer_supply palmas_ldousb_supply[] = {
 	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.0"),
 	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.1"),
 	REGULATOR_SUPPLY("avdd_usb", "tegra-ehci.2"),
-#ifndef CONFIG_PROJECT_PP3N
 //	REGULATOR_SUPPLY("hvdd_usb", "tegra-ehci.2"),
-#endif
 
 };
 
@@ -354,22 +329,12 @@ PALMAS_REGS_PDATA(smps123, 900,  1350, NULL, 0, 0, 0, 0,
 	0, PALMAS_EXT_CONTROL_ENABLE1, 0, 0, 0);
 PALMAS_REGS_PDATA(smps45, 900,  1400, NULL, 0, 0, 0, 0,
 	0, PALMAS_EXT_CONTROL_NSLEEP, 0, 0, 0);
-#ifdef CONFIG_PROJECT_PP3N
-PALMAS_REGS_PDATA(smps6, 3200,  3200, NULL, 0, 0, 1, NORMAL,
-	0, 0, 0, 0, PALMAS_SMPS6_VOLTAGE | PALMAS_SMPS6_VOLTAGE_RANGE);
-#else
 PALMAS_REGS_PDATA(smps6, 3200,  3200, NULL, 0, 0, 1, NORMAL,
 	0, 0, 0, 0, 0);
-#endif
 PALMAS_REGS_PDATA(smps7, 1350,  1350, NULL, 0, 0, 1, NORMAL,
 	0, 0, 0, 0, 0);
-#ifdef CONFIG_PROJECT_PP3N
-PALMAS_REGS_PDATA(smps8, 1800,  1800, NULL, 1, 1, 1, NORMAL,
-	0, 0, 0, 0, PALMAS_SMPS8_VOLTAGE | PALMAS_SMPS8_VOLTAGE_RANGE);
-#else
 PALMAS_REGS_PDATA(smps8, 1800,  1800, NULL, 1, 1, 1, NORMAL,
 	0, 0, 0, 0, 0);
-#endif
 PALMAS_REGS_PDATA(smps9, 2900,  2900, NULL, 1, 0, 1, NORMAL,
 	0, 0, 0, 0, 0);
 PALMAS_REGS_PDATA(smps10, 5000,  5000, NULL, 0, 0, 0, 0,
@@ -709,12 +674,6 @@ static struct platform_device *fixed_reg_devs[] = {
 #endif
 
 	    ADD_FIXED_REG(avdd_1v2_usb3),
-#ifdef CONFIG_PROJECT_PP3N 
-		// [FIXME]suppose it should be controlled by usb3_ap 
-		// (smps10 + PALMAS_GPIO1)
-		// it would cause loader block while jumping to kernel
-		ADD_FIXED_REG(hvdd_3v3_usb3_ap),
-#endif
 };
 
 int __init macallan_palmas_regulator_init(void)

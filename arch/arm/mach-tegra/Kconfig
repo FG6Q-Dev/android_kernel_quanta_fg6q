@@ -981,18 +981,6 @@ config TEGRA_VDD_CORE_OVERRIDE
 	  within override range, and core modules clocks are capped at rates
 	  safe at override level.
 
-config PROJECT_SKU_VARIANT_BBG
-        bool "For BungBungGame"
-
-config PROJECT_SKU_VARIANT_LEPAN
-        bool "For LePan"
-
-config PROJECT_PP3N
-        bool "NV PP3N board"
-
-config PROJECT_PP3N_FHD
-        bool "NV PP3N board"
-
 config 2S_BATTERY_USB_CHARGING
         bool "Support usb charging for 2S battery"
 

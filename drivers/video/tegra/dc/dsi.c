@@ -3830,13 +3830,8 @@ static void __tegra_dc_dsi_init(struct tegra_dc *dc)
 
 	if (dsi->info.dsi2lvds_bridge_enable)
 		dsi->out_ops = &tegra_dsi2lvds_ops;
-#ifdef CONFIG_PROJECT_PP3N_FHD
-	else if (dsi->info.dsi2edp_bridge_enable)
-		dsi->out_ops = &sn65dsi8x_dsi2edp_ops;
-#else
 	else if (dsi->info.dsi2edp_bridge_enable)
 		dsi->out_ops = &tegra_dsi2edp_ops;
-#endif
 	else
 		dsi->out_ops = NULL;
 

@@ -32,65 +32,27 @@ enum i2c_transfer_type {
 	I2C_READ,
 };
 
-#ifdef CONFIG_PROJECT_PP3N
-#define DSI2LVDS_TEGRA_I2C_BUS	0
-#else
 #define DSI2LVDS_TEGRA_I2C_BUS	3
-#endif
 #define DSI2LVDS_REG_VAL(addr, val)	{(addr), (val)}
 
 static u8 dsi2lvds_config_clk[][2] = {
-#ifdef CONFIG_PROJECT_PP3N
-	DSI2LVDS_REG_VAL(0x0d, 0x00), /* pLL disable */
-	DSI2LVDS_REG_VAL(0x0a, 0x05), /* configure PLL */
-	DSI2LVDS_REG_VAL(0x0b, 0x10), /* configure PLL */
-	DSI2LVDS_REG_VAL(0x0d, 0x01), /* pLL enable */
-#else
 	DSI2LVDS_REG_VAL(0x0d, 0x00), /* pLL disable */
 	DSI2LVDS_REG_VAL(0x0a, 0x00), /* configure PLL */
 	DSI2LVDS_REG_VAL(0x0b, 0x00), /* configure PLL */
 	DSI2LVDS_REG_VAL(0x0d, 0x01), /* pLL enable */
-#endif
 };
 
 static u8 dsi2lvds_config_dsi[][2] = {
-#ifdef CONFIG_PROJECT_PP3N
-	DSI2LVDS_REG_VAL(0x10, 0x26), /* default left right ganged mode */
-	DSI2LVDS_REG_VAL(0x11, 0x00),
-	DSI2LVDS_REG_VAL(0x12, 0x29), /* channel A clk range */
-#else
 	DSI2LVDS_REG_VAL(0x10, 0x80), /* default left right ganged mode */
 	DSI2LVDS_REG_VAL(0x12, 0x08), /* channel A clk range */
 	DSI2LVDS_REG_VAL(0x13, 0x08), /* channel B clk range */
-#endif
 };
 
 static u8 dsi2lvds_config_lvds[][2] = {
-#ifdef CONFIG_PROJECT_PP3N
-	DSI2LVDS_REG_VAL(0x18, 0x72),
-#else
 	DSI2LVDS_REG_VAL(0x18, 0x7f),
-#endif
 };
 
 static u8 dsi2lvds_config_video[][2] = {
-#ifdef CONFIG_PROJECT_PP3N
-	DSI2LVDS_REG_VAL(0x20, 0x56), /* horizontal pixels on dsi channel A */
-	DSI2LVDS_REG_VAL(0x21, 0x05),
-	DSI2LVDS_REG_VAL(0x24, 0x00), /* vertical pixels on lvds channel A */
-	DSI2LVDS_REG_VAL(0x25, 0x03),
-	DSI2LVDS_REG_VAL(0x28, 0x21), /* Pixel clk delay from dsi to */
-	DSI2LVDS_REG_VAL(0x29, 0x00), /* lvds channel A */
-	DSI2LVDS_REG_VAL(0x2c, 0x22), /* hsync width channel A */
-	DSI2LVDS_REG_VAL(0x2d, 0x00),
-	DSI2LVDS_REG_VAL(0x30, 0x06), /* vsync width channel A */
-	DSI2LVDS_REG_VAL(0x31, 0x00),
-	DSI2LVDS_REG_VAL(0x34, 0x40), /* h back porch channel A */
-	DSI2LVDS_REG_VAL(0x36, 0x04), /* v back porch channel A */
-	DSI2LVDS_REG_VAL(0x38, 0x10), /* h front porch channel A */
-	DSI2LVDS_REG_VAL(0x3a, 0x02), /* v front porch channel A */
-	DSI2LVDS_REG_VAL(0x3c, 0x00), /* channel A/B test pattern */
-#else
 	DSI2LVDS_REG_VAL(0x20, 0x40), /* horizontal pixels on dsi channel A */
 	DSI2LVDS_REG_VAL(0x21, 0x01),
 	DSI2LVDS_REG_VAL(0x22, 0x40), /* horizontal pixels on dsi channel B */
@@ -120,7 +82,6 @@ static u8 dsi2lvds_config_video[][2] = {
 	DSI2LVDS_REG_VAL(0x3a, 0x0a), /* v front porch channel A */
 	DSI2LVDS_REG_VAL(0x3b, 0x00), /* v front porch channel B */
 	DSI2LVDS_REG_VAL(0x3c, 0x00), /* channel A/B test pattern */
-#endif
 };
 
 static u8 dsi2lvds_soft_reset[][2] = {
@@ -139,11 +100,7 @@ static struct i2c_client *init_i2c_slave(struct tegra_dc_dsi_data *dsi)
 	struct i2c_client *client;
 	struct i2c_board_info p_data = {
 		.type = "dsi2lvds_bridge",
-#ifdef CONFIG_PROJECT_PP3N
-		.addr = 0x2C,
-#else
 		.addr = 0x2D,
-#endif
 	};
 	int bus = DSI2LVDS_TEGRA_I2C_BUS;
 	int err = 0;

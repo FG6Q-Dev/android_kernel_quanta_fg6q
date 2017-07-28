@@ -1632,14 +1632,6 @@ static int bq2419x_charger_init(void)
     return ret;
 }
 
-#ifdef CONFIG_PROJECT_PP3N
-static struct i2c_board_info macallan_i2c_board_info_bm280[] = {
-        {
-                I2C_BOARD_INFO("bmp280", 0x77),
-        },
-};
-#endif
-
 int __init macallan_sensors_init(void)
 {
 	int err;
@@ -1665,11 +1657,7 @@ int __init macallan_sensors_init(void)
     i2c_register_board_info(0, macallan_i2c_board_info_cm3218,
                 ARRAY_SIZE(macallan_i2c_board_info_cm3218));
 #endif
-
-#ifdef CONFIG_PROJECT_PP3N
-    i2c_register_board_info(1, macallan_i2c_board_info_bm280,
-                ARRAY_SIZE(macallan_i2c_board_info_bm280));
-#endif    
+   
     /*	
 	i2c_register_board_info(0, macallan_i2c0_board_info_cm3217,
 				ARRAY_SIZE(macallan_i2c0_board_info_cm3217));
@@ -1677,13 +1665,6 @@ int __init macallan_sensors_init(void)
 #ifdef CONFIG_PROJECT_FG6Q
 	i2c_register_board_info(0, max17048_boardinfo,
 		ARRAY_SIZE(max17048_boardinfo));
-#endif
-
-#ifdef CONFIG_PROJECT_PP3N
-    i2c_register_board_info(0, bq27541_boardinfo,
-		ARRAY_SIZE(bq27541_boardinfo));
-		
-	bq2419x_charger_init();
 #endif
 
 	return 0;

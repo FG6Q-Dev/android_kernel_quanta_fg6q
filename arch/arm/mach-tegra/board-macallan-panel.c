@@ -436,12 +436,6 @@ static void macallan_panel_select(void)
 	default:
 #if defined(CONFIG_PROJECT_FG6Q)
 		panel = &dsi_s_wqxga_10_1;	//EP5N settings	
-#elif defined(CONFIG_PROJECT_PP3N)
-#ifdef CONFIG_PROJECT_PP3N_FHD
-		panel = &dsi_c_1080p_11_6;
-#else
-		panel = &dsi_c_11_6;
-#endif
 #else
 		panel = &dsi_p_wuxga_10_1;
 #endif

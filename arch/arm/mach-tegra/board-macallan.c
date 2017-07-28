@@ -234,9 +234,7 @@ static __initdata struct tegra_clk_init_table macallan_clk_init_table[] = {
 	{ "i2c3",	"pll_p",	3200000,	false},
 	{ "i2c4",	"pll_p",	3200000,	false},
 	{ "i2c5",	"pll_p",	3200000,	false},
-#ifndef CONFIG_PROJECT_PP3N
 	{ "extern3","clk_32k",	32768,		false},
-#endif
 	{ NULL,		NULL,		0,		0},
 };
 
@@ -309,19 +307,6 @@ static struct i2c_board_info __initdata es305_board_info = {
 };
 #endif
 //\\--------------------------------------------------------
-
-#ifdef CONFIG_PROJECT_SKU_VARIANT_BBG
-static struct pn544_i2c_platform_data nfc_pdata = {
-	.irq_gpio = TEGRA_GPIO_PW2,
-	.ven_gpio = TEGRA_GPIO_PQ3,
-	.firm_gpio = TEGRA_GPIO_PH0,
-};
-
-static struct i2c_board_info __initdata nfc_board_info = {
-	I2C_BOARD_INFO("pn544", 0x28),
-	.platform_data = &nfc_pdata,
-};
-#endif
 
 #ifdef CONFIG_TOUCHSCREEN_FT5X06
 void ft5x06_gpio_reset(void)
@@ -416,11 +401,6 @@ static void macallan_i2c_init(void)
 	tegra11_i2c_device3.dev.platform_data = &macallan_i2c3_platform_data;
 	tegra11_i2c_device4.dev.platform_data = &macallan_i2c4_platform_data;
 	tegra11_i2c_device5.dev.platform_data = &macallan_i2c5_platform_data;
-
-#ifdef CONFIG_PROJECT_SKU_VARIANT_BBG
-	nfc_board_info.irq = gpio_to_irq(TEGRA_GPIO_PW2);
-	i2c_register_board_info(0, &nfc_board_info, 1);
-#endif
 
 	platform_device_register(&tegra11_i2c_device5);
 	platform_device_register(&tegra11_i2c_device4);
@@ -1014,25 +994,6 @@ void ep5n_a2_set_charge_led(int r_on, int g_on)
 }
 #endif
 
-#ifdef CONFIG_PROJECT_PP3N
-#define GEN3_CHARGE_LED_R		TEGRA_GPIO_PR4
-#define GEN3_CHARGE_LED_G		TEGRA_GPIO_PS0
-
-void pp3n_set_charge_led(int r_on, int g_on)
-{
-	static int init;
-
-	if(!init)
-	{
-		gpio_request(GEN3_CHARGE_LED_R, "charge led red");
-		gpio_request(GEN3_CHARGE_LED_G, "charge led green");
-		init = 1;
-	}
-	gpio_direction_output(GEN3_CHARGE_LED_R, r_on);
-	gpio_direction_output(GEN3_CHARGE_LED_G, g_on);
-}
-#endif
-
 
 static void __init tegra_macallan_init(void)
 {
@@ -1059,9 +1020,7 @@ static void __init tegra_macallan_init(void)
 	macallan_emc_init();
 	macallan_edp_init();
 	//macallan_touch_init();
-#ifndef CONFIG_PROJECT_PP3N
 	gen3_32k_clk_init();
-#endif
 	gen3_touch_init();
 	macallan_panel_init();
 	macallan_kbc_init();

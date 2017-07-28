@@ -1061,7 +1061,7 @@ static int mmc_sdio_power_restore(struct mmc_host *host)
 	mmc_send_if_cond(host, host->ocr_avail);
 
 	ret = mmc_send_io_op_cond(host, 0, &ocr);
-#if defined(CONFIG_PROJECT_FG6Q) || defined(CONFIG_PROJECT_PP3N)
+#if defined(CONFIG_PROJECT_FG6Q)
         ocr |= 0x80;
 #endif
 	if (ret)
@@ -1076,7 +1076,7 @@ static int mmc_sdio_power_restore(struct mmc_host *host)
 		goto out;
 	}
 
-#if defined(CONFIG_PROJECT_FG6Q) || defined(CONFIG_PROJECT_PP3N)
+#if defined(CONFIG_PROJECT_FG6Q)
 	host->ocr |= 0x100000;
 #endif
 	ret = mmc_sdio_init_card(host, host->ocr, host->card, 0);
@@ -1107,7 +1107,7 @@ int mmc_attach_sdio(struct mmc_host *host)
 	int err, i, funcs;
 	u32 ocr;
 	struct mmc_card *card;
-#if defined(CONFIG_PROJECT_FG6Q) || defined(CONFIG_PROJECT_PP3N)
+#if defined(CONFIG_PROJECT_FG6Q)
 	u32 oldHostOcr;
 	u32 oldDevOcr;
 #endif
@@ -1123,7 +1123,7 @@ int mmc_attach_sdio(struct mmc_host *host)
 	if (host->ocr_avail_sdio)
 		host->ocr_avail = host->ocr_avail_sdio;
 
-#if defined(CONFIG_PROJECT_FG6Q) || defined(CONFIG_PROJECT_PP3N)
+#if defined(CONFIG_PROJECT_FG6Q)
 	oldHostOcr = host->ocr_avail;
 	oldDevOcr = ocr;
 	host->ocr_avail = oldHostOcr;
@@ -1154,7 +1154,7 @@ int mmc_attach_sdio(struct mmc_host *host)
 	/*
 	 * Detect and init the card.
 	 */
-#if defined(CONFIG_PROJECT_FG6Q) || defined(CONFIG_PROJECT_PP3N)
+#if defined(CONFIG_PROJECT_FG6Q)
 	host->ocr_avail = oldHostOcr | 0x100000;
 	host->ocr = oldHostOcr | 0x100000;
 	ocr = oldDevOcr;

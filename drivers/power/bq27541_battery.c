@@ -80,10 +80,6 @@ static u8 data[2];
 static int ret = 0;
 static int batt_capacity = 0;
 
-#ifdef CONFIG_PROJECT_PP3N
-void pp3n_set_charge_led(int r_on, int g_on);
-#endif
-
 /*
 static enum supply_type {
 	SUPPLY_TYPE_BATTERY = 0,
@@ -430,15 +426,6 @@ static int BattChargerStatus(struct bq27541_device_info *di)
 		//printk("POWER_SUPPLY_STATUS_CHARGING~~~~~~~~~~~~~~~~ \n");
 		status = POWER_SUPPLY_STATUS_CHARGING;
 	}
-
-#if defined(CONFIG_PROJECT_PP3N)
-	if(status == POWER_SUPPLY_STATUS_FULL)
-		pp3n_set_charge_led(0, 1);
-	else if(status == POWER_SUPPLY_STATUS_CHARGING)
-		pp3n_set_charge_led(1, 0);
-	else
-		pp3n_set_charge_led(0, 0);
-#endif
 
 	return status;
 

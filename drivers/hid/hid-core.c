@@ -927,22 +927,6 @@ static void hid_input_field(struct hid_device *hid, struct hid_field *field,
 
 	for (n = 0; n < count; n++) {
 
-#ifdef CONFIG_PROJECT_PP3N
-        if (max == 102) {
-             if (field->value[n] >= 103) {
-                 field->value[n] -= 50;
-                if (field->value[n] > 70)
-                     field->value[n] -= 10;
-             }
-
-            if (value[n] >= 103) {
-                value[n] -= 50;
-                 if (value[n] > 70)
-                    value[n] -= 10;
-             }
-	      }
-#endif
-
 
 		if (HID_MAIN_ITEM_VARIABLE & field->flags) {
 			hid_process_event(hid, field, &field->usage[n], value[n], interrupt);

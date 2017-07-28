@@ -42,9 +42,6 @@ static __initdata struct tegra_drive_pingroup_config macallan_drive_pinmux[] = {
 #include "board-macallan-pinmux-t11x-ep5n.h"
 #endif
 
-#if defined(CONFIG_PROJECT_PP3N)
-#include "board-macallan-pinmux-t11x-pp3n.h"
-#endif
 /* THIS IS FOR TESTING OR WORKAROUND PURPOSES. ANYTHING INSIDE THIS TABLE
  * SHOULD BE PUSHED TO PINMUX SPREADSHEET FOR AUTOGEN OR FIXED
  */

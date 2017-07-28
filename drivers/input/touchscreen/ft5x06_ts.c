@@ -69,15 +69,6 @@
 }
 
 /* Panel parameter define */
-#ifdef CONFIG_PROJECT_PP3N
-#define MAX_X	1366
-#define MAX_Y	768
-#endif
-
-#ifdef CONFIG_PROJECT_PP3N_FHD
-#define MAX_X	1920
-#define MAX_Y	1080
-#endif
 
 #ifdef CONFIG_PROJECT_FG6Q
 #define MAX_X	2560

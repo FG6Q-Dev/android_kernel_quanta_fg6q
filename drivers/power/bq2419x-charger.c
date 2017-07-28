@@ -70,9 +70,6 @@ struct bq2419x_chip {
 	int				status;
 	int				rtc_alarm_time;
 	void				(*update_status)(int, int);
-#ifdef CONFIG_PROJECT_PP3N
-	int max_charge_current_mA;
-#endif
 
 	struct regulator_dev		*chg_rdev;
 	struct regulator_desc		chg_reg_desc;
@@ -227,71 +224,9 @@ static int bq2419x_init(struct bq2419x_chip *bq2419x)
 	return ret;
 }
 
-#ifdef CONFIG_PROJECT_PP3N
-static int read_battery(struct i2c_adapter *adapter,
-		unsigned char *buf, u16 count, u8 offset)
-{
-	int r, retries;
-
-	for (retries = 3; retries > 0; retries--) {
-		struct i2c_msg msgs[] = {
-			{
-				.addr   = 0x55,
-				.flags  = 0,
-				.len    = 1,
-				.buf    = &offset,
-			}, {
-				.addr   = 0x55,
-				.flags  = I2C_M_RD,
-				.len    = count,
-				.buf    = buf,
-			}
-		};
-
-		r = i2c_transfer(adapter, msgs, 2);
-		if (r == 2)
-			return 0;
-
-		if (r != -EAGAIN)
-			break;
-	}
-
-	return r < 0 ? r : -EIO;
-}
-
-static int bq2419x_check_battery()
-{
-	struct i2c_adapter *adapter;
-	struct i2c_client *client;
-	struct i2c_board_info info;
-	int ret;
-	u16 val;
-
-	adapter = i2c_get_adapter(0);
-	if (adapter == NULL) {
-		printk("bq2419x_check_battery: adapter request failed\n");
-		ret = -ENXIO;
-	}
-
-	ret = read_battery(adapter, &val, 2, 0x08);
-
-	//printk(KERN_INFO "%s, val = 0x%x\n", __func__, val);
-
-	return ret;
-}
-#endif
-
 static int bq2419x_charger_init(struct bq2419x_chip *bq2419x)
 {
 	int ret;
-
-#ifdef CONFIG_PROJECT_PP3N
-	ret = bq2419x_check_battery();
-	if (ret < 0) {
-		dev_err(bq2419x->dev, "%s: no battery present(%d)\n", __func__, ret);
-		return ret;
-	}
-#endif
 	
 	/* Configure Charge Current Control to 2A*/
 	ret = regmap_write(bq2419x->regmap, BQ2419X_CHRG_CTRL_REG, 0x60);
@@ -860,9 +795,6 @@ static int __devinit bq2419x_probe(struct i2c_client *client,
 
 	if (pdata->bcharger_pdata) {
 		bq2419x->update_status	= pdata->bcharger_pdata->update_status;
-#ifdef CONFIG_PROJECT_PP3N
-		bq2419x->max_charge_current_mA = pdata->bcharger_pdata->max_charge_current_mA;
-#endif
 		bq2419x->rtc_alarm_time	= pdata->bcharger_pdata->rtc_alarm_time;
 		bq2419x->wdt_time_sec	= pdata->bcharger_pdata->wdt_timeout;
 		bq2419x->chg_restart_time =
