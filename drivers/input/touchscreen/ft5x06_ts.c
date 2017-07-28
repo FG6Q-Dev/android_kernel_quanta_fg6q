@@ -70,16 +70,10 @@
 
 /* Panel parameter define */
 
-#ifdef CONFIG_PROJECT_FG6Q
 #define MAX_X	2560
 #define MAX_Y	1600
-#endif
 
-#ifdef CONFIG_PROJECT_FG6Q
 #define FTS_MAX_TOUCH	10
-#else
-#define FTS_MAX_TOUCH	5
-#endif
 
 #define FTS_MAX_TOUCH_PRESS	255
 
@@ -508,11 +502,7 @@ static void fts_input_report(struct fts_info *ts, struct fts_packet_info *buf)
 	for(i = 0; (touch->id < 0x0F) && (i < FTS_MAX_TOUCH); i++, touch++){
 
 		x = (u16)(touch->x_msb << 8) | (u16)touch->x_lsb;
-#ifdef CONFIG_PROJECT_FG6Q
 		y = ( (u16)(touch->y_msb << 8) | (u16)touch->y_lsb);
-#else
-		y = MAX_Y-( (u16)(touch->y_msb << 8) | (u16)touch->y_lsb);
-#endif
 
 		fts_dbg("ID = %d, Event = %d, X = %d, Y = %d\n", touch->id, touch->event, x, y);
 

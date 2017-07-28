@@ -1061,9 +1061,7 @@ static int mmc_sdio_power_restore(struct mmc_host *host)
 	mmc_send_if_cond(host, host->ocr_avail);
 
 	ret = mmc_send_io_op_cond(host, 0, &ocr);
-#if defined(CONFIG_PROJECT_FG6Q)
         ocr |= 0x80;
-#endif
 	if (ret)
 		goto out;
 
@@ -1076,9 +1074,7 @@ static int mmc_sdio_power_restore(struct mmc_host *host)
 		goto out;
 	}
 
-#if defined(CONFIG_PROJECT_FG6Q)
 	host->ocr |= 0x100000;
-#endif
 	ret = mmc_sdio_init_card(host, host->ocr, host->card, 0);
 	if (!ret && host->sdio_irqs)
 		mmc_signal_sdio_irq(host);
@@ -1107,10 +1103,8 @@ int mmc_attach_sdio(struct mmc_host *host)
 	int err, i, funcs;
 	u32 ocr;
 	struct mmc_card *card;
-#if defined(CONFIG_PROJECT_FG6Q)
 	u32 oldHostOcr;
 	u32 oldDevOcr;
-#endif
 
 	BUG_ON(!host);
 	WARN_ON(!host->claimed);
@@ -1123,12 +1117,10 @@ int mmc_attach_sdio(struct mmc_host *host)
 	if (host->ocr_avail_sdio)
 		host->ocr_avail = host->ocr_avail_sdio;
 
-#if defined(CONFIG_PROJECT_FG6Q)
 	oldHostOcr = host->ocr_avail;
 	oldDevOcr = ocr;
 	host->ocr_avail = oldHostOcr;
 	ocr = oldDevOcr | 0x80;
-#endif
 
 	/*
 	 * Sanity check the voltages that the card claims to
@@ -1154,11 +1146,9 @@ int mmc_attach_sdio(struct mmc_host *host)
 	/*
 	 * Detect and init the card.
 	 */
-#if defined(CONFIG_PROJECT_FG6Q)
 	host->ocr_avail = oldHostOcr | 0x100000;
 	host->ocr = oldHostOcr | 0x100000;
 	ocr = oldDevOcr;
-#endif
 
 	err = mmc_sdio_init_card(host, host->ocr, NULL, 0);
 	if (err) {

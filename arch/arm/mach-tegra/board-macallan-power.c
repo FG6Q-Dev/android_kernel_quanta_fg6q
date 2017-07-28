@@ -175,9 +175,6 @@ static struct regulator_consumer_supply palmas_smps6_supply[] = {
 static struct regulator_consumer_supply palmas_smps6_revA_supply[] = {
 	REGULATOR_SUPPLY("vdd_lcd_hv", NULL),
 	REGULATOR_SUPPLY("avdd_lcd", NULL),
-#ifndef CONFIG_PROJECT_FG6Q
-	REGULATOR_SUPPLY("avdd", "spi0.0"),
-#endif
 	REGULATOR_SUPPLY("vdd_lcd_hv_r_tsp", NULL),
 	REGULATOR_SUPPLY("vdd_lcd_hv_r_edp", NULL),
 };
@@ -265,10 +262,8 @@ static struct regulator_consumer_supply palmas_ldo4_supply[] = {
 static struct regulator_consumer_supply palmas_ldo5_supply[] = {
 	REGULATOR_SUPPLY("avdd_cam2", NULL),
 	REGULATOR_SUPPLY("avdd", "2-0010"),
-#ifdef CONFIG_PROJECT_FG6Q
 	REGULATOR_SUPPLY("pri_cam_2v8", NULL),
 	REGULATOR_SUPPLY("sec_cam_2v8", NULL),
-#endif
 };
 
 static struct regulator_consumer_supply palmas_ldo5_e1569_supply[] = {
@@ -432,7 +427,6 @@ static struct palmas_pmic_platform_data pmic_platform = {
 	.disable_smps10_boost_suspend = true,
 };
 
-#ifdef CONFIG_PROJECT_FG6Q
 struct palmas_clk32k_init_data palmas_clk32k_idata[] = {
         {
                 .clk32k_id = PALMAS_CLOCK32KG,
@@ -442,7 +436,6 @@ struct palmas_clk32k_init_data palmas_clk32k_idata[] = {
                 .enable = true,
         },
 };
-#endif
 
 static struct palmas_pinctrl_config palmas_pincfg[] = {
 	PALMAS_PINMUX(POWERGOOD, POWERGOOD, DEFAULT, DEFAULT),
@@ -475,10 +468,8 @@ static struct palmas_platform_data palmas_pdata = {
 	.gpio_base = PALMAS_TEGRA_GPIO_BASE,
 	.irq_base = PALMAS_TEGRA_IRQ_BASE,
 	.pmic_pdata = &pmic_platform,
-#ifdef CONFIG_PROJECT_FG6Q
 	.clk32k_init_data = palmas_clk32k_idata,
         .clk32k_init_data_size = ARRAY_SIZE(palmas_clk32k_idata),
-#endif
 	.use_power_off = true,
 	.pinctrl_pdata = &palmas_pinctrl_pdata,
 	.extcon_pdata = &palmas_extcon_pdata,
@@ -522,10 +513,8 @@ static struct regulator_consumer_supply fixed_reg_vd_cam_1v8_supply[] = {
 	REGULATOR_SUPPLY("vdd_i2c", "2-000e"),
 	REGULATOR_SUPPLY("vddio_cam", "vi"),
 	REGULATOR_SUPPLY("pwrdet_cam", NULL),
-#ifdef CONFIG_PROJECT_FG6Q
 	REGULATOR_SUPPLY("pri_cam_1v8", NULL),
 	REGULATOR_SUPPLY("sec_cam_1v8", NULL),
-#endif
 	REGULATOR_SUPPLY("dmic_en", NULL),
 	REGULATOR_SUPPLY("vdd_light_sensor_1v8", NULL),
 };
@@ -667,11 +656,9 @@ static struct platform_device *fixed_reg_devs[] = {
 	ADD_FIXED_REG(vddio_sd_slot),
 	ADD_FIXED_REG(vd_cam_1v8),
 	ADD_FIXED_REG(vdd_usb_5v),
-#ifdef CONFIG_PROJECT_FG6Q
 	ADD_FIXED_REG(vdd_vbrtr),
 	ADD_FIXED_REG(va_ap_1v2_en),
 	ADD_FIXED_REG(hvdd_3v3_usb3_ap),
-#endif
 
 	    ADD_FIXED_REG(avdd_1v2_usb3),
 };

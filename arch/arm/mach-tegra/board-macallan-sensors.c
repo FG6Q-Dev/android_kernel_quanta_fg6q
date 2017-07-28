@@ -110,23 +110,15 @@ static struct cm3218_platform_data cm3218_pdata = {
         .levels = { 0x0A, 0xA0, 0xE1, 0x140, 0x280, 0x500,
                     0xA28, 0x16A8, 0x1F40, 0x2800},
         .power = NULL, //__capella_cm3218_power,
-#ifdef CONFIG_PROJECT_FG6Q
             .ALS_slave_address = 0x90 >> 1,
-#else
-        .ALS_slave_address = 0x10,
-#endif
         .check_interrupt_add = CM3218_check_INI,
         .is_cmd = CM3218_ALS_SM_2 | CM3218_ALS_IT_250ms | CM3218_ALS_PERS_1 | CM3218_ALS_RES_1,
 };
 
 
 static struct i2c_board_info macallan_i2c_board_info_cm3218[] = {
-        {
-#ifdef CONFIG_PROJECT_FG6Q            
+        { 
                 I2C_BOARD_INFO(CM3218_I2C_NAME, 0x90 >> 1),
-#else
-                I2C_BOARD_INFO(CM3218_I2C_NAME, 0x10),
-#endif
                 .platform_data = &cm3218_pdata,
                 .irq = CM3218_INT_N,
         },
@@ -336,7 +328,7 @@ static int macallan_get_vcmvdd(void)
 	}
 	return 0;
 }
-#ifdef CONFIG_PROJECT_FG6Q
+
 static int macallan_ar0833_power_on(struct ar0833_power_rail *pw)
 {
 	int err;
@@ -426,9 +418,7 @@ struct ar0833_platform_data macallan_ar0833_pdata = {
 	.power_on = macallan_ar0833_power_on,
 	.power_off = macallan_ar0833_power_off,
 };
-#endif
 
-#ifdef CONFIG_PROJECT_FG6Q
 static int macallan_a1040_power_on(struct a1040_power_rail *pw)
 {
 	int err;
@@ -513,9 +503,7 @@ struct a1040_platform_data macallan_a1040_pdata = {
 	.power_on = macallan_a1040_power_on,
 	.power_off = macallan_a1040_power_off,
 };
-#endif
 
-#ifdef CONFIG_PROJECT_FG6Q
 static int macallan_lm3560_power_on(struct lm356x_power_rail *pw)
 {
 	int err;
@@ -576,7 +564,6 @@ static struct lm356x_platform_data lm3560_pdata = {
 	.power_on_callback = macallan_lm3560_power_on,
 	.power_off_callback = macallan_lm3560_power_off,
 };
-#endif
 
 static struct ad5816_platform_data macallan_ad5816_pdata = {
 	.cfg = 0,
@@ -587,7 +574,6 @@ static struct ad5816_platform_data macallan_ad5816_pdata = {
 	.power_off = macallan_focuser_power_off,
 };
 
-#ifdef CONFIG_PROJECT_FG6Q
 static struct i2c_board_info macallan_i2c_board_info_qpadgen3_cam[] = {
 	{
 		I2C_BOARD_INFO("ar0833", 0x36),
@@ -606,25 +592,14 @@ static struct i2c_board_info macallan_i2c_board_info_qpadgen3_cam[] = {
 		.platform_data = &macallan_ad5816_pdata,
 	},
 };
-#endif
 
 static int macallan_camera_init(void)
 {
-#ifdef CONFIG_PROJECT_FG6Q
 	tegra_pinmux_config_table(&mclk_enable, 1);
 	tegra_pinmux_config_table(&pbb0_enable, 1);
-#else
-	tegra_pinmux_config_table(&mclk_disable, 1);
-	tegra_pinmux_config_table(&pbb0_disable, 1);
-#endif
 
-#ifdef CONFIG_PROJECT_FG6Q
 	i2c_register_board_info(2, macallan_i2c_board_info_qpadgen3_cam,
 		ARRAY_SIZE(macallan_i2c_board_info_qpadgen3_cam));
-#else
-	i2c_register_board_info(2, macallan_i2c_board_info_e1625,
-		ARRAY_SIZE(macallan_i2c_board_info_e1625));
-#endif
 	return 0;
 }
 
@@ -634,27 +609,15 @@ static int macallan_camera_init(void)
 static struct mpu_platform_data gyro_platform_data = {
 	.int_config = 0x10,
 	.level_shifter = 0,
-#ifdef CONFIG_PROJECT_FG6Q
     .orientation = {	0, -1,  0,
 					    1,  0,  0,
 						0,  0,  1 },
-#else
-    .orientation = {    0, -1,  0,
-                       -1,  0,  0,
-                        0,  0, -1 },
-#endif
 	.sec_slave_type = SECONDARY_SLAVE_TYPE_COMPASS,
 	.sec_slave_id = COMPASS_ID_AK8963,
 	.secondary_i2c_addr = 0x0C,	
-#ifdef CONFIG_PROJECT_FG6Q
     .secondary_orientation = { 0, 1, 0,
 							   -1, 0, 0,
 							   0, 0, 1 },
-#else
-    .secondary_orientation = { 0, -1, 0,
-                              -1, 0, 0,
-                               0, 0, 1 },
-#endif
 	.key =
     {
 	0xdd, 0x16, 0xcd, 0x7, 0xd9, 0xba, 0x97, 0x37, 
@@ -861,11 +824,7 @@ static int macallan_nct1008_init(void)
 static struct thermal_trip_info skin_trips[] = {
 	{
 		.cdev_type = "skin-balanced",
-		#ifdef CONFIG_PROJECT_FG6Q
 			.trip_temp = 48000,
-		#else
-                        .trip_temp = 45000,
-                #endif
 		.trip_type = THERMAL_TRIP_PASSIVE,
 		.upper = THERMAL_NO_LIMIT,
 		.lower = THERMAL_NO_LIMIT,
@@ -1071,22 +1030,15 @@ int __init macallan_sensors_init(void)
 	macallan_camera_init();
     mpuirq_init();
     cm3218irq_init();
-#ifdef CONFIG_PROJECT_FG6Q
     i2c_register_board_info(2, macallan_i2c_board_info_cm3218,
                 ARRAY_SIZE(macallan_i2c_board_info_cm3218));
-#else
-    i2c_register_board_info(0, macallan_i2c_board_info_cm3218,
-                ARRAY_SIZE(macallan_i2c_board_info_cm3218));
-#endif
    
     /*	
 	i2c_register_board_info(0, macallan_i2c0_board_info_cm3217,
 				ARRAY_SIZE(macallan_i2c0_board_info_cm3217));
 	*/
-#ifdef CONFIG_PROJECT_FG6Q
 	i2c_register_board_info(0, max17048_boardinfo,
 		ARRAY_SIZE(max17048_boardinfo));
-#endif
 
 	return 0;
 }

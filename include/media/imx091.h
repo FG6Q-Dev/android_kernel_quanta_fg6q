@@ -15,20 +15,11 @@
 #include <media/nvc_image.h>
 
 /* See notes in the nvc.h file on the GPIO usage */
-#ifdef CONFIG_PROJECT_FG6Q
-enum imx091_gpio {
-	IMX091_GPIO_RESET = 0,
-	IMX091_GPIO_PWDN,
-	IMX091_GPIO_1V8_EN,
-	IMX091_GPIO_2V8_EN,
-};
-#else
 enum imx091_gpio {
 	IMX091_GPIO_RESET = 0,
 	IMX091_GPIO_PWDN,
 	IMX091_GPIO_GP1,
 };
-#endif
 
 /* The enumeration must be in the order the regulators are to be enabled */
 /* See Power Requirements note in the driver */

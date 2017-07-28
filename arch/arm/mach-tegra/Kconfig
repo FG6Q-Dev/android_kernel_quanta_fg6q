@@ -984,7 +984,4 @@ config TEGRA_VDD_CORE_OVERRIDE
 config 2S_BATTERY_USB_CHARGING
         bool "Support usb charging for 2S battery"
 
-config PROJECT_FG6Q
-        bool "Quanta FG6Q/Gigaset QV1030"
-
 endif

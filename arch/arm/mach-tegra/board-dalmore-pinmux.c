@@ -40,11 +40,7 @@ static __initdata struct tegra_drive_pingroup_config dalmore_drive_pinmux[] = {
 								FASTEST, 1),
 };
 
-#ifdef CONFIG_PROJECT_FG6Q
 #include "board-dalmore-pinmux-t11x-ep5n.h"
-#else
-#include "board-dalmore-pinmux-t11x.h"
-#endif
 
 
 /* THIS IS FOR TESTING OR WORKAROUND PURPOSES. ANYTHING INSIDE THIS TABLE

@@ -955,7 +955,6 @@ static int __init gen3_32k_clk_init(void)
 	return 0;
 }
 
-#ifdef CONFIG_PROJECT_FG6Q
 #define GEN3_CHARGE_LED_R		TEGRA_GPIO_PR5
 #define GEN3_CHARGE_LED_G		TEGRA_GPIO_PS0
 
@@ -992,7 +991,6 @@ void ep5n_a2_set_charge_led(int r_on, int g_on)
 	}
 	gpio_direction_output(GEN3_CHARGE_LED_G, g_on);
 }
-#endif
 
 
 static void __init tegra_macallan_init(void)

@@ -622,18 +622,6 @@ static struct palmas_pmic_platform_data pmic_platform = {
 	.dvfs_init_data_size = ARRAY_SIZE(palmas_dvfs_idata),
 };
 
-#ifndef CONFIG_PROJECT_FG6Q
-struct palmas_clk32k_init_data palmas_clk32k_idata[] = {
-	{
-		.clk32k_id = PALMAS_CLOCK32KG,
-		.enable = true,
-	}, {
-		.clk32k_id = PALMAS_CLOCK32KG_AUDIO,
-		.enable = true,
-	},
-};
-#endif
-
 static struct palmas_pinctrl_config palmas_pincfg[] = {
 	PALMAS_PINMUX(POWERGOOD, POWERGOOD, DEFAULT, DEFAULT),
 	PALMAS_PINMUX(VAC, VAC, DEFAULT, DEFAULT),
@@ -664,10 +652,6 @@ static struct palmas_platform_data palmas_pdata = {
 	.gpio_base = PALMAS_TEGRA_GPIO_BASE,
 	.irq_base = PALMAS_TEGRA_IRQ_BASE,
 	.pmic_pdata = &pmic_platform,
-#ifndef CONFIG_PROJECT_FG6Q
-	.clk32k_init_data =  palmas_clk32k_idata,
-	.clk32k_init_data_size = ARRAY_SIZE(palmas_clk32k_idata),
-#endif
 	.irq_type = IRQ_TYPE_LEVEL_HIGH,
 	.use_power_off = true,
 	.pinctrl_pdata = &palmas_pinctrl_pdata,

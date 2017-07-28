@@ -50,7 +50,6 @@ static u16 imx091_ids[] = {
 	0x0091,
 };
 
-#ifdef CONFIG_PROJECT_FG6Q
 // kokob3: config for QPad3, SONY need 1v2, 1v8 and 2v8, EP5N convert 1v2 from 1v8 onboard
 static struct nvc_gpio_init imx091_gpios[] = {
 	{IMX091_GPIO_RESET, GPIOF_OUT_INIT_LOW, "pri_cam_reset", false, true},
@@ -61,20 +60,6 @@ static struct nvc_regulator_init imx091_vregs[] = {
 	{ IMX091_VREG_DVDD, "pri_cam_1v8", },
 	{ IMX091_VREG_AVDD, "pri_cam_2v8", },
 };
-
-#else
-static struct nvc_gpio_init imx091_gpios[] = {
-	{IMX091_GPIO_RESET, GPIOF_OUT_INIT_LOW, "reset", false, true},
-	{IMX091_GPIO_PWDN, GPIOF_OUT_INIT_LOW, "pwdn", false, true},
-	{IMX091_GPIO_GP1, 0, "gp1", false, false},
-};
-
-static struct nvc_regulator_init imx091_vregs[] = {
-	{ IMX091_VREG_DVDD, "vdig", },
-	{ IMX091_VREG_AVDD, "vana", },
-	{ IMX091_VREG_IOVDD, "vif", },
-};
-#endif
 
 struct imx091_info {
 	atomic_t in_use;
@@ -1482,12 +1467,6 @@ static int imx091_gpio_reset(struct imx091_info *info, int val)
 
 static void imx091_gpio_able(struct imx091_info *info, int val)
 {
-#ifndef CONFIG_PROJECT_FG6Q
-	if (val)
-		imx091_gpio_wr(info, IMX091_GPIO_GP1, val);
-	else
-		imx091_gpio_wr(info, IMX091_GPIO_GP1, val);
-#endif
 }
 
 static void imx091_gpio_exit(struct imx091_info *info)
@@ -1504,9 +1483,6 @@ static void imx091_gpio_exit(struct imx091_info *info)
 
 static void imx091_gpio_init(struct imx091_info *info)
 {
-#ifndef CONFIG_PROJECT_FG6Q
-	char label[32];
-#endif
 	unsigned long flags;
 	unsigned type;
 	unsigned i;
@@ -1544,7 +1520,6 @@ static void imx091_gpio_init(struct imx091_info *info)
 		if (!info->pdata->gpio[j].init_en)
 			continue;
 
-#ifdef CONFIG_PROJECT_FG6Q
 		err = gpio_request_one(info->gpio[type].gpio, flags, imx091_gpios[i].label);
 		if (err) {
 			dev_err(&info->i2c_client->dev, "%s ERR %s %u\n",
@@ -1554,26 +1529,6 @@ static void imx091_gpio_init(struct imx091_info *info)
 			dev_dbg(&info->i2c_client->dev, "%s %s %u\n",
 				__func__, imx091_gpios[i].label, info->gpio[type].gpio);
 		}
-#else
-		snprintf(label, sizeof(label), "imx091_%u_%s",
-			 info->pdata->num, imx091_gpios[i].label);
-		err = gpio_request_one(info->gpio[type].gpio, flags, label);
-		if (err) {
-			if (err & -EBUSY) {
-				dev_info(&info->i2c_client->dev,
-				"%s INFO %s %u\n",
-				__func__, label, info->gpio[type].gpio);
-			} else {
-				dev_err(&info->i2c_client->dev,
-				"%s ERR %s %u\n",
-				__func__, label, info->gpio[type].gpio);
-			}
-		} else {
-			info->gpio[type].own = true;
-			dev_dbg(&info->i2c_client->dev, "%s %s %u\n",
-				__func__, label, info->gpio[type].gpio);
-		}
-#endif
 	}
 }
 
