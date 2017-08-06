@@ -157,8 +157,8 @@ void bq24160_get_restricted_setting(u16 *volt, u16 *curr);
 */
 int bq24160_setup_exchanged_power_supply(u8 connection);
 void update_charger_bq24160_status(void);//Derrick.Liu add chg cooler
-int bq24160_battery_present();
-void bq24160_restart_charge();
+int bq24160_battery_present(void);
+void bq24160_restart_charge(void);
 int bq24160_is_charge_done(int *charge_done);
 extern int bq24160_battery_temp;
 #endif

@@ -49,6 +49,7 @@ static int raw_index = 0;
 static u8 vid = 0;
 static u8 ftsver = 0;
 static bool isUpdate = false;
+int fts_enable = 0;
 
 static int fts_enter_mode(struct fts_info *ts, u8 mode)
 {

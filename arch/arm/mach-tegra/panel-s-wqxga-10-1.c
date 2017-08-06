@@ -54,16 +54,13 @@ static struct platform_device *disp_device;
 static struct regulator *avdd_lcd_3v3;
 static struct regulator *vdd_lcd_bl;
 static struct regulator *vdd_lcd_bl_en;
-static struct regulator *dvdd_lcd_1v8;
-static struct regulator *vdd_ds_1v8;
-static struct regulator *vdd_lcd_bl_12v;
 static struct regulator *VD_LCD_HV_R;
 
 //#define en_vdd_bl	TEGRA_GPIO_PG0
 //#define lvds_en		TEGRA_GPIO_PG3
 
-int lp855x_init_reg();
-void init_lp8556();
+int lp855x_init_reg(void);
+void init_lp8556(void);
 
 static tegra_dc_bl_output dsi_s_wqxga_10_1_bl_output_measured = {
 	0, 1, 2, 3, 4, 5, 6, 7,
@@ -435,7 +432,6 @@ void init_lp8556()
 	lp855x_init_reg();
   }
   firstInit = 0 ;
-fail:
 	return;
 }
 

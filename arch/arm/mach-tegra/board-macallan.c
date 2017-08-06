@@ -368,21 +368,10 @@ int ft5x06_touch_power(int on)
 
 	return 0;
 }
-
-static struct ft5x06_ts_platform_data ft5x06_ts_pdata = {
-	.power_on	= ft5x06_touch_power,
-};
 #endif
 
 static struct i2c_board_info __initdata gen3_i2c_bus2_touch_info[] = {
 #ifdef CONFIG_TOUCHSCREEN_FT5X06
-	/*
-	{
-		I2C_BOARD_INFO(FT5X0X_NAME, 0x38),
-		.flags = I2C_CLIENT_WAKE,
-		.platform_data = &ft5x06_ts_pdata,
-	},
-	*/
        {
                I2C_BOARD_INFO("fts", 0x38),
                .flags = I2C_CLIENT_WAKE,
@@ -684,9 +673,9 @@ static struct tegra_usb_otg_data tegra_otg_pdata = {
 
 static void macallan_usb_init(void)
 {
+	struct tegra_xusb_platform_data *xusb_pdata;
 	int usb_port_owner_info = tegra_get_usb_port_owner_info();
 	printk(KERN_ERR "RYINFO: usb_port_owner_info=0x%x \n",usb_port_owner_info);
-	struct tegra_xusb_platform_data *xusb_pdata;
 
 	if ((usb_port_owner_info & UTMI1_PORT_OWNER_XUSB)) {
 		xusb_pdata = tegra_xusb_init(&xusb_bdata);
@@ -703,99 +692,9 @@ static void macallan_usb_init(void)
 	tegra_udc_device.dev.platform_data = &tegra_udc_pdata;
 
 }
-#if 0
-static void macallan_usb_init(void)
-{
-	int usb_port_owner_info = tegra_get_usb_port_owner_info();
-
-	/* Set USB wake sources for macallan */
-	tegra_set_usb_wake_source();
-
-	if (!(usb_port_owner_info & UTMI1_PORT_OWNER_XUSB)) {
-		tegra_otg_device.dev.platform_data = &tegra_otg_pdata;
-		platform_device_register(&tegra_otg_device);
-		/* Setup the udc platform data */
-		tegra_udc_device.dev.platform_data = &tegra_udc_pdata;
-	}
-}
-#endif
-static struct gpio modem_gpios[] = { /* Nemo modem */
-	{MODEM_EN, GPIOF_OUT_INIT_HIGH, "MODEM EN"},
-	{MDM_RST, GPIOF_OUT_INIT_LOW, "MODEM RESET"},
-};
-
-static struct tegra_usb_platform_data tegra_ehci2_hsic_baseband_pdata = {
-	.port_otg = false,
-	.has_hostpc = true,
-	.unaligned_dma_buf_supported = false,
-	.phy_intf = TEGRA_USB_PHY_INTF_HSIC,
-	.op_mode = TEGRA_USB_OPMODE_HOST,
-	.u_data.host = {
-		.vbus_gpio = -1,
-		.hot_plug = false,
-		.remote_wakeup_supported = true,
-		.power_off_on_suspend = true,
-	},
-};
-
-static int baseband_init(void)
-{
-	int ret;
-
-	ret = gpio_request_array(modem_gpios, ARRAY_SIZE(modem_gpios));
-	if (ret) {
-		pr_warn("%s:gpio request failed\n", __func__);
-		return ret;
-	}
-
-	/* enable pull-down for MDM_COLD_BOOT */
-	tegra_pinmux_set_pullupdown(TEGRA_PINGROUP_ULPI_DATA4,
-				    TEGRA_PUPD_PULL_DOWN);
-
-	/* export GPIO for user space access through sysfs */
-	gpio_export(MDM_RST, false);
-
-	return 0;
-}
-
-static const struct tegra_modem_operations baseband_operations = {
-	.init = baseband_init,
-};
-
-static struct tegra_usb_modem_power_platform_data baseband_pdata = {
-	.ops = &baseband_operations,
-	.wake_gpio = -1,
-	.boot_gpio = MDM_COLDBOOT,
-	.boot_irq_flags = IRQF_TRIGGER_RISING | IRQF_TRIGGER_FALLING,
-	.autosuspend_delay = 2000,
-	.short_autosuspend_delay = 50,
-	.tegra_ehci_device = &tegra_ehci2_device,
-	.tegra_ehci_pdata = &tegra_ehci2_hsic_baseband_pdata,
-};
-
-static struct platform_device icera_nemo_device = {
-	.name = "tegra_usb_modem_power",
-	.id = -1,
-	.dev = {
-		.platform_data = &baseband_pdata,
-	},
-};
-
-static void macallan_modem_init(void)
-{
-	int modem_id = tegra_get_modem_id();
-	int usb_port_owner_info = tegra_get_usb_port_owner_info();
-	switch (modem_id) {
-	case TEGRA_BB_NEMO: /* on board i500 HSIC */
-		if (!(usb_port_owner_info & HSIC1_PORT_OWNER_XUSB))
-			platform_device_register(&icera_nemo_device);
-		break;
-	}
-}
 
 #else
 static void macallan_usb_init(void) { }
-static void macallan_modem_init(void) { }
 #endif
 
 static void macallan_audio_init(void)
@@ -867,13 +766,6 @@ static void __init macallan_spi_init(void)
 				ARRAY_SIZE(macallan_spi_devices));
 }
 
-static __initdata struct tegra_clk_init_table touch_clk_init_table[] = {
-	/* name         parent          rate            enabled */
-	{ "extern2",    "pll_p",        41000000,       false},
-	{ "clk_out_2",  "extern2",      40800000,       false},
-	{ NULL,         NULL,           0,              0},
-};
-
 struct rm_spi_ts_platform_data rm31080ts_macallan_data = {
 	.gpio_reset = TOUCH_GPIO_RST_RAYDIUM_SPI,
 	.config = 0,
@@ -899,26 +791,6 @@ struct spi_board_info rm31080a_macallan_spi_board[1] = {
 	 },
 };
 
-static int __init macallan_touch_init(void)
-{
-	struct board_info board_info;
-
-	tegra_get_display_board_info(&board_info);
-	tegra_clk_init_from_table(touch_clk_init_table);
-	if (board_info.board_id == BOARD_E1582)
-		rm31080ts_macallan_data.platform_id = RM_PLATFORM_P005;
-	else
-		rm31080ts_macallan_data.platform_id = RM_PLATFORM_D010;
-	mdelay(20);
-	rm31080a_macallan_spi_board[0].irq = gpio_to_irq(TOUCH_GPIO_IRQ_RAYDIUM_SPI);
-	touch_init_raydium(TOUCH_GPIO_IRQ_RAYDIUM_SPI,
-				TOUCH_GPIO_RST_RAYDIUM_SPI,
-				&rm31080ts_macallan_data,
-				&rm31080a_macallan_spi_board[0],
-				ARRAY_SIZE(rm31080a_macallan_spi_board));
-	return 0;
-}
-
 static int __init gen3_touch_init(void)
 {
 
@@ -940,7 +812,7 @@ static int __init gen3_touch_init(void)
 static int __init gen3_32k_clk_init(void)
 {
 //* //Johnny : EP5N T40X workaround for wifi and gps clock
-	struct clk *clk_cdev3, *clk_out3, *clk_32k;
+	struct clk *clk_cdev3, *clk_out3;
 	int res;
 	
 	clk_cdev3 = clk_get_sys("extern3", NULL);
@@ -1017,7 +889,6 @@ static void __init tegra_macallan_init(void)
 	macallan_suspend_init();
 	macallan_emc_init();
 	macallan_edp_init();
-	//macallan_touch_init();
 	gen3_32k_clk_init();
 	gen3_touch_init();
 	macallan_panel_init();
@@ -1031,7 +902,6 @@ static void __init tegra_macallan_init(void)
        macallan_setup_bluedroid_pm();
 #endif
 	tegra_release_bootloader_fb();
-	//macallan_modem_init();
 #ifdef CONFIG_TEGRA_WDT_RECOVERY
 	tegra_wdt_recovery_init();
 #endif

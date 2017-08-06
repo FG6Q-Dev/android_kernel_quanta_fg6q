@@ -69,47 +69,13 @@
 #endif
 
 #ifdef CONFIG_INPUT_CAPELLA_CM3218
-//If need to power on/off cm3218
-//Implement __capella_cm3218_power function and set cm3218_pdata.power point to this function
-//static int __capella_cm3218_power(int on, uint8_t val){
-//}
 #define CM3218_INT_N TEGRA_GPIO_PX3//187 //pinmux, will init in driver
-
-static int __capella_cm3218_power(int on, uint8_t val)
-{
-    static struct regulator *light_reg;
-    int rc=0;
-
-    light_reg = regulator_get("NULL","vdd_sys_sensor_3v3");
-    if(IS_ERR(light_reg)){
-        printk(KERN_ERR "get light vaux3 regulator fail\n");
-        rc= PTR_ERR(light_reg);
-        return rc;
-    }
-
-    if(on){
-        /*rc = regulator_set_voltage(light_reg, 2800000, 2800000);
-        if(rc){
-            printk(KERN_ERR "set light vaux3 regulator fail\n");
-            return rc;
-        } */
-
-        printk(KERN_INFO "%s: enable light sensor regulator\n",__func__);
-        regulator_enable(light_reg);
-        //gpio_direction_output(OMAP4_CM3217_PWR_GPIO,1);
-    }else {
-        printk(KERN_INFO "%s: disable light sensor regulator\n",__func__);
-        regulator_disable(light_reg);
-    }
-
-    return 0;
-}
 
 static struct cm3218_platform_data cm3218_pdata = {
         .intr = CM3218_INT_N,
         .levels = { 0x0A, 0xA0, 0xE1, 0x140, 0x280, 0x500,
                     0xA28, 0x16A8, 0x1F40, 0x2800},
-        .power = NULL, //__capella_cm3218_power,
+        .power = NULL,
             .ALS_slave_address = 0x90 >> 1,
         .check_interrupt_add = CM3218_check_INI,
         .is_cmd = CM3218_ALS_SM_2 | CM3218_ALS_IT_250ms | CM3218_ALS_PERS_1 | CM3218_ALS_RES_1,
@@ -296,14 +262,8 @@ static int macallan_focuser_power_off(struct ad5816_power_rail *pw)
 	return 0;
 }
 
-static struct tegra_pingroup_config mclk_disable =
-	VI_PINMUX(CAM_MCLK, VI, NORMAL, NORMAL, OUTPUT, DEFAULT, DEFAULT);
-
 static struct tegra_pingroup_config mclk_enable =
 	VI_PINMUX(CAM_MCLK, VI_ALT3, NORMAL, NORMAL, OUTPUT, DEFAULT, DEFAULT);
-
-static struct tegra_pingroup_config pbb0_disable =
-	VI_PINMUX(GPIO_PBB0, VI, NORMAL, NORMAL, OUTPUT, DEFAULT, DEFAULT);
 
 static struct tegra_pingroup_config pbb0_enable =
 	VI_PINMUX(GPIO_PBB0, VI_ALT3, NORMAL, NORMAL, OUTPUT, DEFAULT, DEFAULT);
@@ -395,7 +355,6 @@ static int macallan_ar0833_power_off(struct ar0833_power_rail *pw)
 		return -EFAULT;
 
 	usleep_range(100, 120);
-	//tegra_pinmux_config_table(&mclk_disable, 1);
 	usleep_range(100, 120);
 	gpio_set_value(CAM_PRI_PWRDWN, 0);
 	regulator_disable(macallan_vcmvdd);
@@ -468,6 +427,7 @@ a1040_avdd_fail:
 
 a1040_dvdd_fail:
 	pr_err("%s FAILED\n", __func__);
+	return 0;
 }
 
 static int macallan_a1040_power_off(struct a1040_power_rail *pw)
@@ -478,8 +438,6 @@ static int macallan_a1040_power_off(struct a1040_power_rail *pw)
 		return -EFAULT;
 
 	gpio_set_value(CAM_SEC_PWRDWN, 0);
-
-	//tegra_pinmux_config_table(&pbb0_disable, 1);
 
 	gpio_set_value(CAM_2V8_EN, 0);
 	if (pw->avdd)
@@ -506,7 +464,7 @@ struct a1040_platform_data macallan_a1040_pdata = {
 
 static int macallan_lm3560_power_on(struct lm356x_power_rail *pw)
 {
-	int err;
+	int err = 0;
 	pr_info("%s ++\n", __func__);
 
 	gpio_set_value(CAM_FLASH_PWR, 1);
@@ -633,77 +591,12 @@ static struct mpu_platform_data gyro_platform_data = {
 		.label = _label,				\
 		.value = _value,				\
 	}
-/*static struct cm3217_platform_data macallan_cm3217_pdata = {
-	.levels = {10, 160, 225, 320, 640, 1280, 2600, 5800, 8000, 10240},
-	.golden_adc = 0,
-	.power = 0,
-};
-
-static struct i2c_board_info macallan_i2c0_board_info_cm3217[] = {
-	{
-        I2C_BOARD_INFO("cm3217", 0x10),
-		.platform_data = &macallan_cm3217_pdata,
-	},
-};*/
 
 /* MPU board file definition	*/
-#if 0
-static struct mpu_platform_data mpu6050_gyro_data = {
-	.int_config	= 0x10,
-	.level_shifter	= 0,
-	/* Located in board_[platformname].h */
-	.orientation	= MPU_GYRO_ORIENTATION,
-	.sec_slave_type	= SECONDARY_SLAVE_TYPE_NONE,
-	.key		= {0x4E, 0xCC, 0x7E, 0xEB, 0xF6, 0x1E, 0x35, 0x22,
-			   0x00, 0x34, 0x0D, 0x65, 0x32, 0xE9, 0x94, 0x89},
-};
-#endif
-
-static struct mpu_platform_data mpu_compass_data = {
-	.orientation	= MPU_COMPASS_ORIENTATION,
-	.config		= NVI_CONFIG_BOOT_MPU,
-};
-
-static struct mpu_platform_data bmp180_pdata = {
-	.config		= NVI_CONFIG_BOOT_MPU,
-};
-
-#if 0
-static struct i2c_board_info __initdata inv_mpu6050_i2c2_board_info[] = {
-	{
-		I2C_BOARD_INFO(MPU_GYRO_NAME, MPU_GYRO_ADDR),
-//		.platform_data = &mpu6050_gyro_data,
-	},
-	{
-		/* The actual BMP180 address is 0x77 but because this conflicts
-		 * with another device, this address is hacked so Linux will
-		 * call the driver.  The conflict is technically okay since the
-		 * BMP180 is behind the MPU.  Also, the BMP180 driver uses a
-		 * hard-coded address of 0x77 since it can't be changed anyway.
-		 */
-		I2C_BOARD_INFO("bmp180", 0x78),
-		.platform_data = &bmp180_pdata,
-	},
-	{
-		I2C_BOARD_INFO(MPU_COMPASS_NAME, MPU_COMPASS_ADDR),
-		.platform_data = &mpu_compass_data,
-	},
-};
-#endif
-
-static struct i2c_board_info __initdata inv_mpu6050_i2c2_board_info[] = {
-	{
-		I2C_BOARD_INFO("mpu6050", MPU_GYRO_ADDR),
-		.platform_data = &gyro_platform_data,
-		//.platform_data = &mpu9150_gyro_data,
-	},
-};
-
 static struct i2c_board_info __initdata inv_mpu6500_i2c2_board_info[] = {
 	{
 		I2C_BOARD_INFO("mpu6500", MPU_GYRO_ADDR),
 		.platform_data = &gyro_platform_data,
-		//.platform_data = &mpu9150_gyro_data,
 	},
 };
 
@@ -732,23 +625,6 @@ static void mpuirq_init(void)
 	}
 	pr_info("*** MPU END *** mpuirq_init...\n");
 
-/*
-	inv_mpu6050_i2c2_board_info[0].irq = gpio_to_irq(MPU_GYRO_IRQ_GPIO);
-	i2c_register_board_info(gyro_bus_num, inv_mpu6050_i2c2_board_info,
-		ARRAY_SIZE(inv_mpu6050_i2c2_board_info));
-*/
-
-/*
-	if(qci_mainboard_version() == HW_REV_A)
-	{
-		pr_err("%s: HW_REV_A init inv_mpu6050_i2c2_board_info\n", __func__);
-
-		inv_mpu6050_i2c2_board_info[0].irq = gpio_to_irq(MPU_GYRO_IRQ_GPIO);
-		i2c_register_board_info(gyro_bus_num, inv_mpu6050_i2c2_board_info,
-			ARRAY_SIZE(inv_mpu6050_i2c2_board_info));
-	}
-	else
-*/
     {
 		pr_err("%s: init inv_mpu6500_i2c2_board_info\n\n\n\n", __func__);
 
@@ -765,7 +641,6 @@ static void cm3218irq_init(void)
 {
     int ret = 0;
     unsigned als_irq_gpio = CM3218_INT_N;
-    unsigned als_bus_num = MPU_GYRO_BUS_NUM;
     char *als_name = CM3218_NAME;
 
     pr_info("*** ALS START *** alsirq_init...\n");
@@ -982,36 +857,6 @@ static struct i2c_board_info __initdata max17048_boardinfo[] = {
 	},
 };
 
-static struct bq27541_platform_data bq27541_pdata = {
-};
-
-static struct i2c_board_info __initdata bq27541_boardinfo[] = {
-	{
-		I2C_BOARD_INFO("bq27541", 0x55),
-		.platform_data	= &bq27541_pdata,
-	},
-};
-
-static int bq2419x_charger_init(void)
-{
-	int ret = 0;
-	int bq2419x_psel_port;
-
-    bq2419x_psel_port = TEGRA_GPIO_PU2;
-
-	ret = gpio_request(bq2419x_psel_port, "chrg_psel");
-	if (ret < 0)
-		return ret;
-	
-	ret = gpio_direction_output(bq2419x_psel_port, 1);
-	if (ret < 0) {
-		pr_info("%s: calling gpio_free(bq2419x_psel_port)", __func__);
-		gpio_free(bq2419x_psel_port);
-	}
-
-    return ret;
-}
-
 int __init macallan_sensors_init(void)
 {
 	int err;
@@ -1033,10 +878,6 @@ int __init macallan_sensors_init(void)
     i2c_register_board_info(2, macallan_i2c_board_info_cm3218,
                 ARRAY_SIZE(macallan_i2c_board_info_cm3218));
    
-    /*	
-	i2c_register_board_info(0, macallan_i2c0_board_info_cm3217,
-				ARRAY_SIZE(macallan_i2c0_board_info_cm3217));
-	*/
 	i2c_register_board_info(0, max17048_boardinfo,
 		ARRAY_SIZE(max17048_boardinfo));
 

@@ -66,20 +66,8 @@
 #define PMC_CTRL_INTR_LOW	(1 << 17)
 #define CHARGER_INT    TEGRA_GPIO_PJ0
 
-/* BQ2419X VBUS regulator */
-static struct regulator_consumer_supply bq2419x_vbus_supply[] = {
-	REGULATOR_SUPPLY("usb_vbus", "tegra-ehci.0"),
-	REGULATOR_SUPPLY("usb_vbus", "tegra-otg"),
-};
-
 static struct regulator_consumer_supply bq2419x_batt_supply[] = {
 	REGULATOR_SUPPLY("usb_bat_chg", "tegra-udc.0"),
-};
-
-static struct bq2419x_vbus_platform_data bq2419x_vbus_pdata = {
-	.gpio_otg_iusb = TEGRA_GPIO_PI4,
-	.num_consumer_supplies = ARRAY_SIZE(bq2419x_vbus_supply),
-	.consumer_supplies = bq2419x_vbus_supply,
 };
 
 struct bq2419x_charger_platform_data macallan_bq2419x_charger_pdata = {
@@ -171,14 +159,6 @@ static struct regulator_consumer_supply palmas_smps6_supply[] = {
 	REGULATOR_SUPPLY("vdd_lcd_hv_r_tsp", NULL),
 };
 
-//for hardware A build version 
-static struct regulator_consumer_supply palmas_smps6_revA_supply[] = {
-	REGULATOR_SUPPLY("vdd_lcd_hv", NULL),
-	REGULATOR_SUPPLY("avdd_lcd", NULL),
-	REGULATOR_SUPPLY("vdd_lcd_hv_r_tsp", NULL),
-	REGULATOR_SUPPLY("vdd_lcd_hv_r_edp", NULL),
-};
-
 static struct regulator_consumer_supply palmas_smps7_supply[] = {
 	REGULATOR_SUPPLY("vddio_ddr", NULL),
 };
@@ -216,13 +196,6 @@ static struct regulator_consumer_supply palmas_smps9_supply[] = {
 	REGULATOR_SUPPLY("vddio_hv", "tegradc.1"),
 	REGULATOR_SUPPLY("pwrdet_hv", NULL),
 	REGULATOR_SUPPLY("vdd_lcd_hv_r_edp", NULL),
-};
-
-//for hardware A build version
-static struct regulator_consumer_supply palmas_smps9_revA_supply[] = {
-	REGULATOR_SUPPLY("vddio_sd_slot", "sdhci-tegra.3"),
-	REGULATOR_SUPPLY("vddio_hv", "tegradc.1"),
-	REGULATOR_SUPPLY("pwrdet_hv", NULL),
 };
 
 static struct regulator_consumer_supply palmas_smps10_supply[] = {
@@ -483,22 +456,8 @@ static struct i2c_board_info palma_device[] = {
 	},
 };
 
-static struct regulator_consumer_supply fixed_reg_dvdd_lcd_1v8_supply[] = {
-	REGULATOR_SUPPLY("dvdd_lcd", NULL),
-};
-
 static struct regulator_consumer_supply fixed_reg_vdd_lcd_bl_en_supply[] = {
 	REGULATOR_SUPPLY("vdd_lcd_bl_en", NULL),
-};
-
-/* EN_1V8_TS From TEGRA_GPIO_PH4 */
-static struct regulator_consumer_supply fixed_reg_dvdd_ts_supply[] = {
-	REGULATOR_SUPPLY("dvdd", "spi0.0"),
-};
-
-/* ENABLE 5v0 for HDMI */
-static struct regulator_consumer_supply fixed_reg_vdd_hdmi_5v0_supply[] = {
-	REGULATOR_SUPPLY("vdd_hdmi_5v0", "tegradc.1"),
 };
 
 static struct regulator_consumer_supply fixed_reg_vddio_sd_slot_supply[] = {
@@ -590,21 +549,9 @@ static struct regulator_consumer_supply fixed_reg_va_ap_1v2_en_supply[] = {
  * Creating the fixed regulator device table
  */
 
-FIXED_REG(1,	dvdd_lcd_1v8,	dvdd_lcd_1v8,
-	palmas_rails(smps8),	0,	1,
-	PALMAS_TEGRA_GPIO_BASE + PALMAS_GPIO4,	false,	true,	1,	1800);
-
 FIXED_REG(2,	vdd_lcd_bl_en,	vdd_lcd_bl_en,
 	NULL,	0,	1,
 	TEGRA_GPIO_PH2,	false,	true,	1,	3700);
-
-FIXED_REG(3,	dvdd_ts,	dvdd_ts,
-	palmas_rails(smps8),	0,	0,
-	TEGRA_GPIO_PH4,	false,	false,	1,	1800);
-
-FIXED_REG(4,	vdd_hdmi_5v0,	vdd_hdmi_5v0,
-	palmas_rails(smps10),	0,	0,
-	TEGRA_GPIO_PK6,	true,	true,	0,	5000);
 
 FIXED_REG(5,	vddio_sd_slot,	vddio_sd_slot,
 	palmas_rails(smps9),	0,	0,
@@ -637,18 +584,6 @@ FIXED_REG(11,	va_ap_1v2_en,	va_ap_1v2_en,
 
 
 #define ADD_FIXED_REG(_name)	(&fixed_reg_##_name##_dev)
-
-/* Gpio switch regulator platform data for Macallan E1545 */
-/*
-static struct platform_device *fixed_reg_devs[] = {
-	ADD_FIXED_REG(dvdd_lcd_1v8),
-	ADD_FIXED_REG(vdd_lcd_bl_en),
-	ADD_FIXED_REG(dvdd_ts),
-	ADD_FIXED_REG(vdd_hdmi_5v0),
-	ADD_FIXED_REG(vddio_sd_slot),
-	ADD_FIXED_REG(vd_cam_1v8),
-};
-*/
 
 //EP5N A2
 static struct platform_device *fixed_reg_devs[] = {
@@ -686,18 +621,6 @@ int __init macallan_palmas_regulator_init(void)
 		reg_idata_ldo7.num_consumer_supplies =
 			ARRAY_SIZE(palmas_ldo7_e1569_supply);
 	}
-
-	/*
-	//for maintain A build EDP regulator supply
-//	if(qci_mainboard_version() == HW_REV_A){
-		reg_idata_smps6.consumer_supplies = palmas_smps6_revA_supply;
-		reg_idata_smps6.num_consumer_supplies =
-			ARRAY_SIZE(palmas_smps6_revA_supply);
-		reg_idata_smps9.consumer_supplies = palmas_smps9_revA_supply;
-		reg_idata_smps9.num_consumer_supplies =
-			ARRAY_SIZE(palmas_smps9_revA_supply);
-//	}
-	*/
 
 	for (i = 0; i < PALMAS_NUM_REGS ; i++) {
 		pmic_platform.reg_data[i] = macallan_reg_data[i];

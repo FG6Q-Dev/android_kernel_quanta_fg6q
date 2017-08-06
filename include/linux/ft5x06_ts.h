@@ -68,7 +68,7 @@ struct ft5x0x_ts_data {
 	struct workqueue_struct *ts_workqueue;
 };
 
-static int fts_enable = 0;
+extern int fts_enable;
 
 #ifndef ABS_MT_TOUCH_MAJOR
 #define ABS_MT_TOUCH_MAJOR	0x30	/* touching ellipse */
