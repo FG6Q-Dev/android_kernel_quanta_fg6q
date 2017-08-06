@@ -57,7 +57,7 @@ DHDOFILES = src/aiutils.o src/bcmsdh_sdmmc_linux.o src/dhd_linux.o src/siutils.o
 	src/bcmsdh.o src/dhd_cdc.o src/bcmsdh_linux.o src/dhd_common.o src/linux_osl.o            \
 	src/bcmsdh_sdmmc.o src/dhd_custom_gpio.o src/sbutils.o src/wldev_common.o src/wl_android.o
 
-obj-$(CONFIG_BCMDHD) += bcm43241.o
+obj-$(CONFIG_BCM43241) += bcm43241.o
 bcm43241-objs += $(DHDOFILES)
 
 ifeq ($(CONFIG_BCMDHD_WEXT),y)
