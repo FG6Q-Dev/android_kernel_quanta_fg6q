@@ -582,17 +582,7 @@ static struct mpu_platform_data gyro_platform_data = {
  	0xce, 0xfe, 0x23, 0x90, 0xe1, 0x66, 0x2f, 0x32
     }
 };
-#endif
 
-
-#define TEGRA_CAMERA_GPIO(_gpio, _label, _value)		\
-	{							\
-		.gpio = _gpio,					\
-		.label = _label,				\
-		.value = _value,				\
-	}
-
-/* MPU board file definition	*/
 static struct i2c_board_info __initdata inv_mpu6500_i2c2_board_info[] = {
 	{
 		I2C_BOARD_INFO("mpu6500", MPU_GYRO_ADDR),
@@ -600,7 +590,6 @@ static struct i2c_board_info __initdata inv_mpu6500_i2c2_board_info[] = {
 	},
 };
 
-#ifdef CONFIG_INV_MPU
 static void mpuirq_init(void)
 {
 	int ret = 0;
@@ -625,7 +614,7 @@ static void mpuirq_init(void)
 	}
 	pr_info("*** MPU END *** mpuirq_init...\n");
 
-    {
+	{
 		pr_err("%s: init inv_mpu6500_i2c2_board_info\n\n\n\n", __func__);
 
 		inv_mpu6500_i2c2_board_info[0].irq = gpio_to_irq(MPU_GYRO_IRQ_GPIO);
@@ -635,6 +624,15 @@ static void mpuirq_init(void)
 
 }
 #endif
+
+
+#define TEGRA_CAMERA_GPIO(_gpio, _label, _value)		\
+	{							\
+		.gpio = _gpio,					\
+		.label = _label,				\
+		.value = _value,				\
+	}
+
 
 #ifdef CONFIG_INPUT_CAPELLA_CM3218
 static void cm3218irq_init(void)
@@ -873,7 +871,9 @@ int __init macallan_sensors_init(void)
 	//}
 
 	macallan_camera_init();
-    mpuirq_init();
+#ifdef CONFIG_INV_MPU
+	mpuirq_init();
+#endif
     cm3218irq_init();
     i2c_register_board_info(2, macallan_i2c_board_info_cm3218,
                 ARRAY_SIZE(macallan_i2c_board_info_cm3218));
