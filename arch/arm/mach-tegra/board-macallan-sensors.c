@@ -563,7 +563,7 @@ static int macallan_camera_init(void)
 
 /* MPU board file definition	*/
 //----------------------------------------------------------
-#ifdef CONFIG_INV_MPU
+#ifdef CONFIG_INV_MPU_IIO
 static struct mpu_platform_data gyro_platform_data = {
 	.int_config = 0x10,
 	.level_shifter = 0,
@@ -871,7 +871,7 @@ int __init macallan_sensors_init(void)
 	//}
 
 	macallan_camera_init();
-#ifdef CONFIG_INV_MPU
+#ifdef CONFIG_INV_MPU_IIO
 	mpuirq_init();
 #endif
     cm3218irq_init();
