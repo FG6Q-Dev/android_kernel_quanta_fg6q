@@ -29,22 +29,6 @@
 #include <linux/ioctl.h>
 #endif
 
-#define NVI_CONFIG_BOOT_MPU               (1) /* connected to MPU */
-
-/* Mount maxtices for mount orientation.
- * MTMAT_XXX_CCW_YYY
- *     XXX : mount position. TOP for top and BOT for bottom.
- *     YYY : couter-clockwise rotation angle in degree.
- */
-#define MTMAT_TOP_CCW_0			{  1,  0,  0,  0,  1,  0,  0,  0,  1 }
-#define MTMAT_TOP_CCW_90		{  0, -1,  0,  1,  0,  0,  0,  0,  1 }
-#define MTMAT_TOP_CCW_180		{ -1,  0,  0,  0, -1,  0,  0,  0,  1 }
-#define MTMAT_TOP_CCW_270		{  0,  1,  0, -1,  0,  0,  0,  0,  1 }
-#define MTMAT_BOT_CCW_0			{ -1,  0,  0,  0,  1,  0,  0,  0, -1 }
-#define MTMAT_BOT_CCW_90		{  0, -1,  0, -1,  0,  0,  0,  0, -1 }
-#define MTMAT_BOT_CCW_180		{  1,  0,  0,  0, -1,  0,  0,  0, -1 }
-#define MTMAT_BOT_CCW_270		{  0,  1,  0,  1,  0,  0,  0,  0, -1 }
-
 enum secondary_slave_type {
 	SECONDARY_SLAVE_TYPE_NONE,
 	SECONDARY_SLAVE_TYPE_ACCEL,
@@ -103,8 +87,6 @@ enum ext_slave_id {
  * @secondary_i2c_address: secondary device's i2c address
  * @secondary_orientation: secondary device's orientation matrix
  * @key:                key for MPL library.
- * @config: the selection determines the device behavior.
- *          Select from the NVI_CONFIG_BOOT_ defines.
  *
  * Contains platform specific information on how to configure the MPU3050 to
  * work on this platform.  The orientation matricies are 3x3 rotation matricies
@@ -121,7 +103,6 @@ struct mpu_platform_data {
 	__u16 secondary_i2c_addr;
 	__s8 secondary_orientation[9];
 	__u8 key[16];
-	__u8 config;
 };
 
 #endif	/* __MPU_H_ */
