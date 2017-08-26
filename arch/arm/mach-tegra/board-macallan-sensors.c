@@ -63,10 +63,7 @@
 #include "tegra-board-id.h"
 #include "dvfs.h"
 
-
-#ifdef CONFIG_INV_MPU
 #include <linux/mpu.h>
-#endif
 
 #ifdef CONFIG_INPUT_CAPELLA_CM3218
 #define CM3218_INT_N TEGRA_GPIO_PX3//187 //pinmux, will init in driver
@@ -563,7 +560,6 @@ static int macallan_camera_init(void)
 
 /* MPU board file definition	*/
 //----------------------------------------------------------
-#ifdef CONFIG_INV_MPU
 static struct mpu_platform_data gyro_platform_data = {
 	.int_config = 0x10,
 	.level_shifter = 0,
@@ -582,7 +578,6 @@ static struct mpu_platform_data gyro_platform_data = {
  	0xce, 0xfe, 0x23, 0x90, 0xe1, 0x66, 0x2f, 0x32
     }
 };
-#endif
 
 
 #define TEGRA_CAMERA_GPIO(_gpio, _label, _value)		\
@@ -600,7 +595,6 @@ static struct i2c_board_info __initdata inv_mpu6500_i2c2_board_info[] = {
 	},
 };
 
-#ifdef CONFIG_INV_MPU
 static void mpuirq_init(void)
 {
 	int ret = 0;
@@ -634,7 +628,6 @@ static void mpuirq_init(void)
 	}
 
 }
-#endif
 
 #ifdef CONFIG_INPUT_CAPELLA_CM3218
 static void cm3218irq_init(void)
