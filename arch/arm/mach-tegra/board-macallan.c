@@ -96,10 +96,6 @@
 #include <linux/platform_data/es305.h>
 #endif
 
-#if defined(CONFIG_SWITCH_MIC)
-#include <linux/switch_mic.h>
-#endif
-
 #if defined CONFIG_TI_ST || defined CONFIG_TI_ST_MODULE
 struct ti_st_plat_data macallan_wilink_pdata = {
 	.nshutdown_gpio = TEGRA_GPIO_PQ7,
@@ -514,23 +510,6 @@ static struct platform_device macallan_audio_device = {
 		.platform_data = &macallan_audio_pdata,
 	},
 };
-//----------------------------------------------------------
-#if defined(CONFIG_SWITCH_MIC)
-static struct mic_switch_platform_data switch_mic_pdata = {
-	.dmic_sw1 = TEGRA_GPIO_DMIC_SW1,
-	.dmic_sw2 = TEGRA_GPIO_DMIC_SW2,
-	.dmic_lr  = TEGRA_GPIO_DMIC_LR,
-};
-
-static struct platform_device switch_mic_device = {
-	.name = "switch-mic",
-	.id = -1,
-	.dev	= {
-		.platform_data = &switch_mic_pdata,
-	},
-};
-#endif
-//\\--------------------------------------------------------
 
 #ifdef CONFIG_QIC_MULTIPLE_MODEM
 static struct qic_modem_platform_data qic_modem_device_data = {
@@ -593,12 +572,6 @@ static struct platform_device *macallan_devices[] __initdata = {
 	&qic_modem_device,
 #endif
 };
-
-#if defined(CONFIG_SWITCH_MIC)
-static struct platform_device *switch_mic_devices[] __initdata = {
-	&switch_mic_device,
-};
-#endif
 
 #ifdef CONFIG_USB_SUPPORT
 static struct tegra_usb_platform_data tegra_udc_pdata = {
@@ -708,9 +681,6 @@ static void macallan_audio_init(void)
 	macallan_audio_pdata.codec_dai_name = "rt5640-aif1";
 	board_id = qci_mainboard_version();
 	if(board_id == HW_REV_B)	{
-#if defined(CONFIG_SWITCH_MIC)
-		platform_add_devices(switch_mic_devices,ARRAY_SIZE(switch_mic_devices));
-#endif
 #if defined(CONFIG_AUDIENCE_ES305)
 		i2c_register_board_info(0, &es305_board_info, 1);
 #endif
