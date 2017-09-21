@@ -92,10 +92,6 @@
 #define GEN3_TOUCH_IRQ_1		TEGRA_GPIO_PK2
 #define GEN3_TOUCH_RESET		TEGRA_GPIO_PK4
 
-#if defined(CONFIG_AUDIENCE_ES305)
-#include <linux/platform_data/es305.h>
-#endif
-
 #if defined CONFIG_TI_ST || defined CONFIG_TI_ST_MODULE
 struct ti_st_plat_data macallan_wilink_pdata = {
 	.nshutdown_gpio = TEGRA_GPIO_PQ7,
@@ -279,30 +275,10 @@ static struct tegra_i2c_platform_data macallan_i2c5_platform_data = {
 	.sda_gpio		= {TEGRA_GPIO_I2C5_SDA, 0},
 	.arb_recovery = arb_lost_recovery,
 };
-//----------------------------------------------------------
-#if defined(CONFIG_AUDIENCE_ES305)
-static struct es305_platform_data es305_pdata = { 
-        .gpio_wakeup = GPIO_ES305_WAKEUP, 
-        .gpio_reset = GPIO_ES305_RESET, 
-        .clk_enable = NULL,
-        .passthrough_src = 3, /* port C */ 
-        .passthrough_dst = 1, /* port A */ 
-        .passthrough_type = 1, /* all pass(data, clk,fsync) */
-}; 
-#endif
-//\\--------------------------------------------------------
 
 static struct i2c_board_info __initdata rt5640_board_info = {
 	I2C_BOARD_INFO("rt5640", 0x1c),
 };
-//----------------------------------------------------------
-#if defined(CONFIG_AUDIENCE_ES305)
-static struct i2c_board_info __initdata es305_board_info = {
-	I2C_BOARD_INFO("audience_es305", 0x3e),
-	.platform_data = &es305_pdata,
-};
-#endif
-//\\--------------------------------------------------------
 
 #ifdef CONFIG_TOUCHSCREEN_FT5X06
 void ft5x06_gpio_reset(void)
@@ -673,18 +649,11 @@ static void macallan_usb_init(void) { }
 static void macallan_audio_init(void)
 {
 	struct board_info board_info;
-	int board_id = 0;
 
 	tegra_get_board_info(&board_info);
 
 	macallan_audio_pdata.codec_name = "rt5640.0-001c";
 	macallan_audio_pdata.codec_dai_name = "rt5640-aif1";
-	board_id = qci_mainboard_version();
-	if(board_id == HW_REV_B)	{
-#if defined(CONFIG_AUDIENCE_ES305)
-		i2c_register_board_info(0, &es305_board_info, 1);
-#endif
-	}
 }
 
 
