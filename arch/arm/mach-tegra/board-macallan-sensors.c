@@ -51,7 +51,6 @@
 #include <linux/max17048_battery.h>
 #include <linux/cm3218.h>
 #include <linux/i2c/bq27541.h>
-#include "hw_version.h"
 
 
 #include "gpio-names.h"

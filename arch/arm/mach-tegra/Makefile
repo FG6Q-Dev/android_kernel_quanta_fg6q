@@ -304,8 +304,6 @@ obj-${CONFIG_MACH_MACALLAN}             += board-macallan-panel.o
 obj-${CONFIG_MACH_MACALLAN}             += board-macallan-kbc.o
 obj-${CONFIG_MACH_MACALLAN}             += board-macallan-sensors.o
 obj-${CONFIG_MACH_MACALLAN}             += panel-s-wqxga-10-1.o
-obj-${CONFIG_MACH_MACALLAN}             += hw_version.o
-obj-${CONFIG_MACH_MACALLAN}             += version.o
 
 obj-${CONFIG_MACH_TEGRATAB}            += board-tegratab.o
 obj-${CONFIG_MACH_TEGRATAB}            += board-tegratab-memory.o

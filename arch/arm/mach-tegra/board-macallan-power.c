@@ -45,7 +45,6 @@
 #include <mach/edp.h>
 #include <mach/gpio-tegra.h>
 
-#include "hw_version.h"
 #include "cpu-tegra.h"
 #include "pm.h"
 #include "tegra-board-id.h"

@@ -80,7 +80,6 @@
 #include "pm-irq.h"
 #include "common.h"
 #include "tegra-board-id.h"
-#include "hw_version.h"
 #ifdef CONFIG_TOUCHSCREEN_FT5X06
 #include <linux/ft5x06_ts.h>
 #endif
